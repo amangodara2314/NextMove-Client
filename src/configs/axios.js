@@ -1,5 +1,6 @@
 import axios from "axios";
 import apiBaseUrl from "../constants/env";
+import Cookies from "js-cookie";
 console.log(apiBaseUrl);
 const api = axios.create({
   baseURL: apiBaseUrl,
@@ -11,7 +12,7 @@ const api = axios.create({
 api.interceptors.request.use(
   (request) => {
     console.log("making a request to this url :", request.url);
-    const accessToken = localStorage.getItem("accessToken");
+    const accessToken = Cookies.get("accessToken");
     if (accessToken) {
       request.headers["Authorization"] = `Bearer ${accessToken}`;
     }

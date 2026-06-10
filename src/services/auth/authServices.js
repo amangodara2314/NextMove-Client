@@ -5,4 +5,8 @@ const login = (data) => {
   return api.post(endpoints.auth.LOGIN, data);
 };
 
-export { login };
+const getMe = () => {
+  return api.get(endpoints.auth.GET_ME);
+};
+
+export { login, getMe };
