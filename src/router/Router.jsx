@@ -3,6 +3,7 @@ import Login from "../pages/auth/Login";
 import AuthenticatedLayout from "../layouts/AuthenticatedLayout";
 import MainLayout from "../layouts/MainLayout";
 import Home from "../pages/Home";
+import Play from "../pages/Play";
 
 export default function Router() {
   const router = createBrowserRouter([
@@ -22,6 +23,10 @@ export default function Router() {
         {
           index: true,
           element: <Home />,
+        },
+        {
+          path: "/play",
+          element: <Play />,
         },
       ],
     },

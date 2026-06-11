@@ -37,7 +37,7 @@ export default function AuthenticatedLayout({ children }) {
       } catch (error) {
         const message = getErrorMessage(error);
         console.error(error);
-        navigate("/login");
+        navigate("/login", { replace: true });
       } finally {
         setLoading(false);
       }

@@ -79,7 +79,11 @@ export function LoginForm({ className, submitHandler, ...props }) {
                 <Button type="submit">
                   {isSubmitting ? "Logging in..." : "Login"}
                 </Button>
-                {errors.root && <FieldError>{errors.root.message}</FieldError>}
+                {errors.root && (
+                  <FieldError className="text-center">
+                    {errors.root.message}
+                  </FieldError>
+                )}
               </Field>
               <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
                 Or continue with

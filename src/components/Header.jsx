@@ -3,11 +3,12 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../features/auth/authSelectors";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ProjectName from "./ProjectName";
+import { ThemeToggler } from "./ThemeToggler";
 function Header() {
   const user = useSelector(selectUser);
   console.log(user);
   return (
-    <div className="py-3 border-b border-border bg-sidebar text-sidebar-foreground flex items-center justify-between px-6">
+    <div className="py-3 border-b border-border bg-sidebar text-sidebar-foreground h-13.5 flex items-center justify-between px-6">
       <ProjectName />
       <ul className="flex text-md items-center gap-8">
         <li>
@@ -20,14 +21,19 @@ function Header() {
             Games
           </a>
         </li>
+        <li>
+          <ThemeToggler />
+        </li>
+        {/*
         <li className="cursor-pointer">
           <Avatar>
-            {/* <AvatarImage src="https://github.com/shadcn.png" /> */}
+            <AvatarImage src="https://github.com/shadcn.png" /> 
             <AvatarFallback>
               {user?.username[0].toUpperCase() || "P"}
             </AvatarFallback>
           </Avatar>
         </li>
+        */}
       </ul>
     </div>
   );
