@@ -4,7 +4,7 @@ import { ThemeProvider } from "./components/ThemeProvider";
 
 export default function App() {
   return (
-    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+    <ThemeProvider defaultTheme="dark" storageKey="nextmove-ui-theme">
       <div className="h-full w-full">
         <Router />
       </div>
