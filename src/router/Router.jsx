@@ -3,7 +3,8 @@ import Login from "../pages/auth/Login";
 import AuthenticatedLayout from "../layouts/AuthenticatedLayout";
 import MainLayout from "../layouts/MainLayout";
 import Home from "../pages/Home";
-import Play from "../pages/Play";
+import Matchmaking from "../pages/Matchmaking";
+import Game from "../pages/Game";
 
 export default function Router() {
   const router = createBrowserRouter([
@@ -26,7 +27,11 @@ export default function Router() {
         },
         {
           path: "/play",
-          element: <Play />,
+          element: <Matchmaking />,
+        },
+        {
+          path: "/game/:gameId",
+          element: <Game />,
         },
       ],
     },

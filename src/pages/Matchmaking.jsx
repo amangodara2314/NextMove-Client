@@ -5,22 +5,76 @@ import { getErrorMessage } from "../utils/responseHelpers";
 import { newGame } from "../services/matchmaking.js/matchmakingServices";
 import Loader from "../components/Loader";
 import { cn } from "../lib/utils";
+import socket from "../configs/socket";
+import { useNavigate } from "react-router-dom";
 
 export default function Play() {
   const [error, setError] = useState(null);
+  const [noMatchFound, setNoMatchFound] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const initiateMatchmaking = async () => {
+    const startMatchmaking = async () => {
       try {
-        // Call the API to start matchmaking
         await newGame();
       } catch (error) {
-        const message = getErrorMessage(error);
-        setError(message);
+        setError(getErrorMessage(error));
       }
     };
-    initiateMatchmaking();
-  }, []);
+
+    const handleMatchFound = (data) => {
+      console.log("Match found:", data);
+
+      socket.emit("MATCH_ACK", {
+        reservationId: data.reservationId,
+      });
+    };
+
+    const handleNoMatchFound = (data) => {
+      console.log("No match:", data);
+      setNoMatchFound(true);
+    };
+
+    const handleMatchReady = (data) => {
+      console.log("Game ready:", data);
+      navigate(`/game/${data.gameId}`);
+    };
+
+    socket.on("MATCH_FOUND", handleMatchFound);
+    socket.on("NO_MATCH_FOUND", handleNoMatchFound);
+    socket.on("MATCH_READY", handleMatchReady);
+
+    if (socket.connected) {
+      startMatchmaking();
+    } else {
+      socket.once("connect", startMatchmaking);
+    }
+
+    return () => {
+      socket.off("MATCH_FOUND", handleMatchFound);
+      socket.off("NO_MATCH_FOUND", handleNoMatchFound);
+      socket.off("MATCH_READY", handleMatchReady);
+      socket.off("connect", startMatchmaking);
+
+      socket.emit("CANCEL_MATCHMAKING");
+    };
+  }, [navigate]);
+
+  if (noMatchFound) {
+    return (
+      <div>
+        No active players found at the moment. Please try again later...
+      </div>
+    );
+  }
+
+  if (noMatchFound) {
+    return (
+      <div className="">
+        No active players found at the moment. Please try again later...
+      </div>
+    );
+  }
 
   return (
     <div className="h-full bg-background text-foreground flex items-center justify-center px-6">

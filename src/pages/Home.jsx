@@ -3,9 +3,12 @@ import { selectUser } from "../features/auth/authSelectors";
 import { Button } from "../components/ui/button";
 import { ChessKing, ChessQueen } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import socket from "../configs/socket";
 
 export default function Home() {
   const user = useSelector(selectUser);
+
   return (
     <div className="space-y-6 h-full px-12 pt-16">
       <div className="grid grid-cols-2">
