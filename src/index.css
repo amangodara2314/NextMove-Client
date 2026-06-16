@@ -132,3 +132,80 @@
     @apply font-sans;
   }
 }
+
+/* ── Chess game page ─────────────────────────────────────────────────────── */
+
+@keyframes live-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+@keyframes active-bar {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes live-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+@keyframes active-bar {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* Tailwind can't express min() with two different units in a single value */
+.board-inner {
+  width: min(100%, calc(100dvh - 112px - 24px));
+  height: min(100%, calc(100dvh - 112px - 24px));
+  aspect-ratio: 1 / 1;
+}
+
+/* Animated left accent — Tailwind can't do ::before with animation */
+.player-active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 12px;
+  bottom: 12px;
+  width: 2px;
+  border-radius: 2px;
+  background: #d4a847;
+  animation: active-bar 1.8s ease-in-out infinite;
+}
+
+.live-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22c55e;
+  flex-shrink: 0;
+  animation: live-dot 1.8s ease-in-out infinite;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}

@@ -5,7 +5,7 @@ import FloatingSidebar from "../components/FloatingSidebar";
 
 function MainLayout() {
   return (
-    <div className="flex min-h-screen w-full">
+    <div className="flex max-h-dvh w-full">
       <FloatingSidebar />
       <main className="flex-1">
         <Outlet />

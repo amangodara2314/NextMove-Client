@@ -8,7 +8,7 @@ import { cn } from "../lib/utils";
 import socket from "../configs/socket";
 import { useNavigate } from "react-router-dom";
 
-export default function Play() {
+export default function Matchmaking() {
   const [error, setError] = useState(null);
   const [noMatchFound, setNoMatchFound] = useState(false);
   const navigate = useNavigate();
