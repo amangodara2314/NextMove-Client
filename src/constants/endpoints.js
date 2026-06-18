@@ -7,6 +7,9 @@ const endpoints = {
   matchmaking: {
     NEW_GAME: "/matchmaking/new-game",
   },
+  game: {
+    GET_GAME: (gameId) => `/game/${gameId}`,
+  },
 };
 
 export default endpoints;

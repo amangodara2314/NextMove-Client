@@ -2,22 +2,31 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import Board from "../components/game/Board";
 import PlayerPanel from "../components/game/PlayerPanel";
-
-const MOCK_GAME = {
-  id: "b3ac7296-c64e-46f2-b992-2267e4b16390",
-  turn: "WHITE",
-  result: null,
-  status: "ACTIVE",
-  createdAt: "2026-06-14T04:06:45.877Z",
-  whitePlayer: { username: "aman", rating: 1200 },
-  blackPlayer: { username: "aman", rating: 1200 },
-  currentFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-  userColor: "BLACK",
-};
+import useGame from "../hooks/useGame";
+import Loader from "../components/Loader";
 
 export default function Game() {
   const { gameId } = useParams();
-  const [game] = useState(MOCK_GAME);
+  const { game, loading, error, setGame } = useGame(gameId);
+
+  if (loading) {
+    return (
+      <div className="h-dvh w-full flex items-center justify-center">
+        <Loader />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="h-dvh w-full flex items-center justify-center">
+        <div className="text-center space-y-2">
+          <p className="text-destructive text-2xl font-semibold">{error}</p>
+          <p>Please try again later.</p>
+        </div>
+      </div>
+    );
+  }
 
   const myColor = game.userColor;
   const oppColor = myColor === "WHITE" ? "BLACK" : "WHITE";

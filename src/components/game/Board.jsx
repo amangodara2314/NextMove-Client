@@ -52,7 +52,8 @@ export default function Board({
   // v5 API: receives ({ square, piece })
   function onSquareClick({ square }) {
     const clickedPiece = game.get(square);
-    const isOwnPiece = clickedPiece && clickedPiece.color === game.turn();
+    const isOwnPiece =
+      clickedPiece && clickedPiece.color === boardOrientation[0]; // "w" or "b"
 
     if (!moveFrom) {
       if (isOwnPiece) {
@@ -87,15 +88,27 @@ export default function Board({
   function onPieceDrop({ sourceSquare, targetSquare }) {
     let moved = false;
     safeGameMutate((g) => {
-      const result = g.move({
-        from: sourceSquare,
-        to: targetSquare,
-        promotion: "q",
-      });
-      if (result) moved = true;
+      try {
+        const result = g.move({
+          from: sourceSquare,
+          to: targetSquare,
+          promotion: "q",
+        });
+        if (result) moved = true;
+      } catch {
+        // illegal move — leave board unchanged
+      }
     });
     resetSelection();
     return moved;
+  }
+
+  function canDragPiece({ piece }) {
+    const pieceColor = piece.pieceType[0]; // "w" or "b"
+    return (
+      pieceColor === game.turn() &&
+      pieceColor === (boardOrientation === "white" ? "w" : "b")
+    );
   }
 
   return (
@@ -106,6 +119,7 @@ export default function Board({
         boardWidth: boardWidth || undefined,
         onPieceDrop,
         onSquareClick,
+        canDragPiece,
         squareStyles: optionSquares,
         darkSquareStyle: { backgroundColor: "#B58863" },
         lightSquareStyle: { backgroundColor: "#F0D9B5" },

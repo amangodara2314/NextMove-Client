@@ -2,7 +2,7 @@ import { Loader2, Swords, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { getErrorMessage } from "../utils/responseHelpers";
-import { newGame } from "../services/matchmaking.js/matchmakingServices";
+import { newGame } from "../services/matchmaking/matchmakingServices";
 import Loader from "../components/Loader";
 import { cn } from "../lib/utils";
 import socket from "../configs/socket";
