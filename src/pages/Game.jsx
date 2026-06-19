@@ -7,7 +7,7 @@ import Loader from "../components/Loader";
 
 export default function Game() {
   const { gameId } = useParams();
-  const { game, loading, error, setGame } = useGame(gameId);
+  const { game, loading, error, setGame, handleMove } = useGame(gameId);
 
   if (loading) {
     return (
@@ -43,7 +43,7 @@ export default function Game() {
 
   return (
     <div className="h-full flex items-center justify-center p-3 bg-background overflow-hidden">
-      <div className="flex items-start gap-3 w-full max-w-[594px] h-full">
+      <div className="flex items-start gap-3 w-full max-w-148.5 h-full">
         {/* ── Board column ── */}
         <div className="flex flex-col flex-1 min-w-0 h-full items-start">
           {/* Opponent */}
@@ -59,7 +59,10 @@ export default function Game() {
             <div className="board-inner">
               <Board
                 boardOrientation={myColor === "WHITE" ? "white" : "black"}
-                position={game.currentFen}
+                position={game.fen}
+                version={game.version}
+                gameId={game.id}
+                onMove={handleMove}
               />
             </div>
           </div>

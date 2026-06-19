@@ -1,17 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
+
+const DEFAULT_PROMOTION = "q"; // TODO: replace with a real promotion picker
+const DEFAULT_TIME_SPENT = 10; // TODO: replace with real elapsed-time tracking
 
 export default function Board({
   boardWidth,
   boardOrientation = "white",
-  position: initialPosition,
+  position,
+  gameId,
+  version,
+  onMove,
 }) {
-  const [game, setGame] = useState(
-    () => new Chess(initialPosition || undefined),
-  );
+  const [game, setGame] = useState(() => new Chess());
   const [moveFrom, setMoveFrom] = useState("");
   const [optionSquares, setOptionSquares] = useState({});
+
+  useEffect(() => {
+    setGame(new Chess(position || undefined));
+    resetSelection();
+  }, [position]);
 
   function safeGameMutate(modify) {
     setGame((g) => {
@@ -49,11 +58,33 @@ export default function Board({
     setOptionSquares({});
   }
 
+  async function submitMove(from, to) {
+    const piece = game.get(from);
+    const isPromotion =
+      piece?.type === "p" &&
+      ((piece.color === "w" && to[1] === "8") ||
+        (piece.color === "b" && to[1] === "1"));
+
+    try {
+      await onMove({
+        gameId,
+        from,
+        to,
+        promotion: isPromotion ? DEFAULT_PROMOTION : undefined,
+        version,
+        timeSpent: DEFAULT_TIME_SPENT,
+        timestamp: Date.now(),
+      });
+    } catch {
+      setGame(new Chess(position || undefined));
+    }
+  }
+
   // v5 API: receives ({ square, piece })
   function onSquareClick({ square }) {
     const clickedPiece = game.get(square);
     const isOwnPiece =
-      clickedPiece && clickedPiece.color === boardOrientation[0]; // "w" or "b"
+      clickedPiece && clickedPiece.color === boardOrientation[0];
 
     if (!moveFrom) {
       if (isOwnPiece) {
@@ -63,14 +94,12 @@ export default function Board({
       return;
     }
 
-    // Re-select a different own piece
     if (isOwnPiece && square !== moveFrom) {
       const hasMoves = getMoveOptions(square, game);
       if (hasMoves) setMoveFrom(square);
       return;
     }
 
-    // Attempt the move
     const moves = game.moves({ square: moveFrom, verbose: true });
     const validMove = moves.find((m) => m.to === square);
     if (!validMove) {
@@ -78,10 +107,14 @@ export default function Board({
       return;
     }
 
+    const from = moveFrom;
+    const to = square;
+
     safeGameMutate((g) => {
-      g.move({ from: moveFrom, to: square, promotion: "q" });
+      g.move({ from, to, promotion: "" });
     });
     resetSelection();
+    submitMove(from, to);
   }
 
   // v5 API: receives ({ sourceSquare, targetSquare, piece })
@@ -92,7 +125,7 @@ export default function Board({
         const result = g.move({
           from: sourceSquare,
           to: targetSquare,
-          promotion: "q",
+          promotion: "",
         });
         if (result) moved = true;
       } catch {
@@ -100,11 +133,14 @@ export default function Board({
       }
     });
     resetSelection();
+
+    if (moved) submitMove(sourceSquare, targetSquare);
+
     return moved;
   }
 
   function canDragPiece({ piece }) {
-    const pieceColor = piece.pieceType[0]; // "w" or "b"
+    const pieceColor = piece.pieceType[0];
     return (
       pieceColor === game.turn() &&
       pieceColor === (boardOrientation === "white" ? "w" : "b")

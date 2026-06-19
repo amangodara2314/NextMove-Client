@@ -3,6 +3,7 @@ import Router from "./router/Router";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { useEffect } from "react";
 import socket, { connectSocket, disconnectSocket } from "./configs/socket";
+import { Toaster } from "@/components/ui/sonner";
 
 export default function App() {
   useEffect(() => {
@@ -29,6 +30,7 @@ export default function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="nextmove-ui-theme">
       <Router />
+      <Toaster />
     </ThemeProvider>
   );
 }
