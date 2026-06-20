@@ -19,12 +19,15 @@ export default function useGame(gameId) {
 
     const controller = new AbortController();
 
-    const joinGame = () => {
+    const joinGame = (shouldSync = true) => {
+      console.log("Joining game:", gameId);
       socket.emit("JOIN_GAME", { gameId });
-      syncGame().catch((err) => {
-        setError(getErrorMessage(err));
-        toast.error(getErrorMessage(err));
-      });
+      if (shouldSync) {
+        syncGame().catch((err) => {
+          setError(getErrorMessage(err));
+          toast.error(getErrorMessage(err));
+        });
+      }
     };
 
     const fetchInitial = async () => {
@@ -40,7 +43,7 @@ export default function useGame(gameId) {
     };
 
     fetchInitial();
-    if (socket.connected) joinGame();
+    if (socket.connected) joinGame(false);
     socket.on("connect", joinGame);
 
     return () => {
@@ -64,9 +67,11 @@ export default function useGame(gameId) {
   const applyMoveUpdate = ({ fen, version, move }) => {
     setGame((prev) => {
       if (!prev) return prev;
+      console.log("Previous game state:", prev);
+      console.log("New FEN:", fen, "New version:", version);
       return {
         ...prev,
-        currentFen: fen,
+        fen,
         version,
         turn: fen.split(" ")[1] === "w" ? "WHITE" : "BLACK",
         lastMove: move,

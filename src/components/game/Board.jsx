@@ -73,7 +73,7 @@ export default function Board({
         promotion: isPromotion ? DEFAULT_PROMOTION : undefined,
         version,
         timeSpent: DEFAULT_TIME_SPENT,
-        timestamp: Date.now(),
+        timestamp: new Date().toISOString(),
       });
     } catch {
       setGame(new Chess(position || undefined));
