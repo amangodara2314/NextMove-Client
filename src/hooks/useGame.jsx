@@ -34,6 +34,7 @@ export default function useGame(gameId) {
       try {
         setLoading(true);
         await syncGame(controller.signal);
+        if (socket.connected) joinGame(false);
       } catch (err) {
         if (err.code === "ERR_CANCELED") return;
         setError(getErrorMessage(err));
@@ -43,7 +44,7 @@ export default function useGame(gameId) {
     };
 
     fetchInitial();
-    if (socket.connected) joinGame(false);
+
     socket.on("connect", joinGame);
 
     return () => {

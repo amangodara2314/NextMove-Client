@@ -14,7 +14,7 @@ export default function Login() {
       const result = await login(data);
       const resData = getResponseData(result);
       console.log(resData);
-      dispatch(setUser(resData.user));
+      dispatch(setUser(resData));
       Cookies.set("accessToken", resData.accessToken, { expires: 7 });
       navigate("/", { replace: true });
       return;

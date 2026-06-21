@@ -19,8 +19,8 @@ export default function Home() {
               {user?.username ? user.username : "Player"}
             </span>{" "}
           </h2>
-          {user.rating && (
-            <p className="text-2xl">Your current ELO is {user.rating}</p>
+          {user?.rating && (
+            <p className="text-2xl">Your current ELO is {user?.rating}</p>
           )}
           <Button asChild size={"lg"}>
             <Link to={"/play"}>Play Now</Link>

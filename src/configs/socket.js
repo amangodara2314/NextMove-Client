@@ -20,6 +20,7 @@ export const connectSocket = () => {
 
   if (!socket.connected) {
     socket.connect();
+    console.log("Connecting to socket server...");
   }
 };
 

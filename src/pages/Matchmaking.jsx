@@ -1,6 +1,6 @@
 import { Loader2, Swords, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getErrorMessage } from "../utils/responseHelpers";
 import { newGame } from "../services/matchmaking/matchmakingServices";
 import Loader from "../components/Loader";
@@ -13,21 +13,23 @@ export default function Matchmaking() {
   const [noMatchFound, setNoMatchFound] = useState(false);
   const navigate = useNavigate();
 
+  const didStartRef = useRef(false);
+
   useEffect(() => {
     const startMatchmaking = async () => {
+      if (didStartRef.current) return;
+      didStartRef.current = true;
+
       try {
         await newGame();
-      } catch (error) {
-        setError(getErrorMessage(error));
+      } catch (err) {
+        setError(getErrorMessage(err));
       }
     };
 
     const handleMatchFound = (data) => {
       console.log("Match found:", data);
-
-      socket.emit("MATCH_ACK", {
-        reservationId: data.reservationId,
-      });
+      socket.emit("MATCH_ACK", { reservationId: data.reservationId });
     };
 
     const handleNoMatchFound = (data) => {
@@ -40,21 +42,17 @@ export default function Matchmaking() {
       navigate(`/game/${data.gameId}`);
     };
 
+    socket.on("connect", startMatchmaking);
     socket.on("MATCH_FOUND", handleMatchFound);
     socket.on("NO_MATCH_FOUND", handleNoMatchFound);
     socket.on("MATCH_READY", handleMatchReady);
-
-    if (socket.connected) {
-      startMatchmaking();
-    } else {
-      socket.once("connect", startMatchmaking);
-    }
+    if (socket.connected) startMatchmaking();
 
     return () => {
+      socket.off("connect", startMatchmaking);
       socket.off("MATCH_FOUND", handleMatchFound);
       socket.off("NO_MATCH_FOUND", handleNoMatchFound);
       socket.off("MATCH_READY", handleMatchReady);
-      socket.off("connect", startMatchmaking);
 
       socket.emit("CANCEL_MATCHMAKING");
     };
@@ -62,16 +60,27 @@ export default function Matchmaking() {
 
   if (noMatchFound) {
     return (
-      <div>
-        No active players found at the moment. Please try again later...
-      </div>
-    );
-  }
-
-  if (noMatchFound) {
-    return (
-      <div className="">
-        No active players found at the moment. Please try again later...
+      <div className="h-full bg-background text-foreground flex items-center justify-center px-6">
+        <div className="text-center space-y-3">
+          <div className="flex justify-center">
+            <div className="p-3 rounded-2xl bg-card border border-border">
+              <TriangleAlert className="size-6 text-destructive" />
+            </div>
+          </div>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            No players found
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            No active players at the moment. Please try again later.
+          </p>
+          <Button
+            variant="outline"
+            className="rounded-xl px-6 mt-2"
+            onClick={() => navigate("/")}
+          >
+            Go Home
+          </Button>
+        </div>
       </div>
     );
   }
@@ -115,7 +124,6 @@ export default function Matchmaking() {
               const row = Math.floor(index / 8);
               const col = index % 8;
               const isDark = (row + col) % 2 === 1;
-
               return (
                 <div key={index} className={isDark ? "bg-black" : "bg-white"} />
               );
@@ -132,6 +140,7 @@ export default function Matchmaking() {
             </div>
           </div>
         </div>
+
         {!error ? (
           <>
             <div className="text-center space-y-2">
@@ -140,13 +149,17 @@ export default function Matchmaking() {
               </div>
             </div>
 
-            <Button variant="outline" className="rounded-xl px-6">
+            <Button
+              variant="outline"
+              className="rounded-xl px-6"
+              onClick={() => navigate("/")}
+            >
               Cancel Search
             </Button>
           </>
         ) : (
-          <div className="text-destructive">
-            Something went wrong. Please try again later...
+          <div className="text-destructive text-sm">
+            Something went wrong. Please try again later.
           </div>
         )}
       </div>
