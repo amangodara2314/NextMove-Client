@@ -13,4 +13,22 @@ const PIECE_UNICODE = {
   bb: "♝",
 };
 
-export { DEFAULT_TIME_SPENT, PIECE_LABELS, PROMOTION_PIECES, PIECE_UNICODE };
+function pieceSymbol(piece) {
+  const map = {
+    PAWN: "",
+    KNIGHT: "N",
+    BISHOP: "B",
+    ROOK: "R",
+    QUEEN: "Q",
+    KING: "K",
+  };
+  return map[piece] ?? "";
+}
+
+export {
+  DEFAULT_TIME_SPENT,
+  PIECE_LABELS,
+  PROMOTION_PIECES,
+  PIECE_UNICODE,
+  pieceSymbol,
+};

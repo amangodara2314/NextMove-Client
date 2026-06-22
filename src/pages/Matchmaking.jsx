@@ -1,7 +1,7 @@
 import { Loader2, Swords, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useRef, useState } from "react";
-import { getErrorMessage } from "../utils/responseHelpers";
+import { getErrorMessage, getResponseData } from "../utils/responseHelpers";
 import { newGame } from "../services/matchmaking/matchmakingServices";
 import Loader from "../components/Loader";
 import { cn } from "../lib/utils";
@@ -21,7 +21,11 @@ export default function Matchmaking() {
       didStartRef.current = true;
 
       try {
-        await newGame();
+        const response = await newGame();
+        const data = getResponseData(response);
+        if (data.gameId) {
+          navigate(`/game/${data.gameId}`, { replace: true });
+        }
       } catch (err) {
         setError(getErrorMessage(err));
       }
@@ -39,7 +43,7 @@ export default function Matchmaking() {
 
     const handleMatchReady = (data) => {
       console.log("Game ready:", data);
-      navigate(`/game/${data.gameId}`);
+      navigate(`/game/${data.gameId}`, { replace: true });
     };
 
     socket.on("connect", startMatchmaking);

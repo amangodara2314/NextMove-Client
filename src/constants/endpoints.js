@@ -9,6 +9,8 @@ const endpoints = {
   },
   game: {
     GET_GAME: (gameId) => `/game/${gameId}`,
+    GET_MOVES: (gameId, cursor) =>
+      `/game/moves/${gameId}${cursor ? "cursor=" + cursor : ""}`,
   },
 };
 
