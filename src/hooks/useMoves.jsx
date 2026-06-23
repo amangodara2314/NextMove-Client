@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getErrorMessage, getResponseData } from "../utils/responseHelpers";
 import { getMoves } from "../services/game/gameServices";
 import socket from "../configs/socket";
@@ -9,9 +9,14 @@ export default function useMoves(gameId) {
   const [loadingMoves, setLoadingMoves] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [movesError, setMovesError] = useState(null);
+  const [selectedMove, setSelectedMove] = useState(null);
+  const fetchingRef = useRef(false);
+  const hasConnectedOnceRef = useRef(false);
 
   const fetchMoves = async () => {
-    if (!gameId || !hasMore) return;
+    if (!gameId || !hasMore || fetchingRef.current) return;
+
+    fetchingRef.current = true;
 
     try {
       setLoadingMoves(true);
@@ -26,6 +31,7 @@ export default function useMoves(gameId) {
       if (error.code === "ERR_CANCELED") return;
       setMovesError(getErrorMessage(error));
     } finally {
+      fetchingRef.current = false;
       setLoadingMoves(false);
     }
   };
@@ -36,6 +42,10 @@ export default function useMoves(gameId) {
 
   useEffect(() => {
     const handleReconnect = () => {
+      if (!hasConnectedOnceRef.current) {
+        hasConnectedOnceRef.current = true;
+        return;
+      }
       fetchMoves();
     };
 
@@ -52,5 +62,7 @@ export default function useMoves(gameId) {
     movesError,
     hasMore,
     fetchMore: fetchMoves,
+    selectedMove,
+    setSelectedMove,
   };
 }

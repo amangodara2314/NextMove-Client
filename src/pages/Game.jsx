@@ -10,7 +10,14 @@ import SidePanel from "../components/game/SidePanel";
 export default function Game() {
   const { gameId } = useParams();
   const { game, loading, error, handleMove } = useGame(gameId);
-  const { moves, loadingMoves, hasMore, fetchMore } = useMoves(gameId);
+  const {
+    moves,
+    loadingMoves,
+    hasMore,
+    fetchMore,
+    selectedMove,
+    setSelectedMove,
+  } = useMoves(gameId);
 
   if (loading) {
     return (
@@ -57,7 +64,8 @@ export default function Game() {
             <div className="board-inner">
               <Board
                 boardOrientation={myColor === "WHITE" ? "white" : "black"}
-                position={game.fen}
+                position={selectedMove?.fenAfter || game.fen}
+                canMove={selectedMove ? false : myActive}
                 version={game.version}
                 gameId={game.id}
                 onMove={handleMove}
@@ -82,6 +90,8 @@ export default function Game() {
             loadingMoves={loadingMoves}
             hasMore={hasMore}
             fetchMore={fetchMore}
+            selectedMove={selectedMove}
+            setSelectedMove={setSelectedMove}
           />
         </div>
       </div>

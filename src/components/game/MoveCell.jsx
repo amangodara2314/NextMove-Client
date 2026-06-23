@@ -1,6 +1,11 @@
 import { pieceSymbol } from "../../constants/pieces";
 
-export default function MoveCell({ move, isLast }) {
+export default function MoveCell({
+  move,
+  isLast,
+  isSelected,
+  onClick = () => {},
+}) {
   if (!move) return <span className="flex-1 px-2 py-1.5 text-sm font-mono" />;
 
   const badge = move.isCheckmate
@@ -8,15 +13,20 @@ export default function MoveCell({ move, isLast }) {
     : move.isCheck
       ? { label: "+", cls: "bg-amber-500/20 text-amber-400" }
       : null;
-
+  const handleClick = () => {
+    onClick(move);
+  };
   return (
     <span
+      onClick={handleClick}
       className={[
         "flex-1 flex items-center gap-1.5 px-2 py-1.5 rounded text-sm font-mono",
         "transition-colors duration-100 select-none",
         isLast
           ? "bg-[#B58863]/20 text-foreground font-semibold"
-          : "text-muted-foreground hover:text-foreground hover:bg-accent/50 cursor-default",
+          : isSelected
+            ? "bg-accent text-accent-foreground"
+            : "text-muted-foreground hover:text-foreground hover:bg-accent/50 cursor-default",
       ].join(" ")}
     >
       {/* Piece glyph */}

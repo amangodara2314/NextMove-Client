@@ -4,7 +4,14 @@ import { ScrollArea } from "../ui/scroll-area";
 import { Skeleton } from "../ui/skeleton";
 import MoveCell from "./MoveCell";
 
-export default function MoveList({ moves, loadingMoves, hasMore, fetchMore }) {
+export default function MoveList({
+  moves,
+  loadingMoves,
+  hasMore,
+  fetchMore,
+  selectedMove,
+  setSelectedMove,
+}) {
   const pairs = groupMovePairs(moves);
   const lastMoveIndex = moves.length - 1;
   const bottomRef = useRef(null);
@@ -57,10 +64,14 @@ export default function MoveList({ moves, loadingMoves, hasMore, fetchMore }) {
                 <MoveCell
                   move={pair.white}
                   isLast={whiteIdx === lastMoveIndex}
+                  isSelected={selectedMove === pair.white}
+                  onClick={() => setSelectedMove(pair.white)}
                 />
                 <MoveCell
                   move={pair.black}
                   isLast={blackIdx === lastMoveIndex}
+                  isSelected={selectedMove === pair.black}
+                  onClick={() => setSelectedMove(pair.black)}
                 />
               </div>
             );

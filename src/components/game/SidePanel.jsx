@@ -6,6 +6,8 @@ export default function SidePanel({
   loadingMoves,
   hasMore,
   fetchMore,
+  selectedMove,
+  setSelectedMove,
 }) {
   const started = new Date(game.createdAt);
   const startedStr =
@@ -21,11 +23,6 @@ export default function SidePanel({
           <h2 className="text-sm font-semibold text-foreground tracking-tight">
             Moves
           </h2>
-          <span className="text-[11px] text-muted-foreground/60 font-mono">
-            {startedStr}
-          </span>
-        </div>
-        <div className="flex items-center gap-1.5 mt-1.5">
           <span
             className={[
               "text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full",
@@ -35,9 +32,6 @@ export default function SidePanel({
             ].join(" ")}
           >
             {game.result ? "Finished" : "Live"}
-          </span>
-          <span className="text-[11px] text-muted-foreground/60">
-            {moves.length} {moves.length === 1 ? "move" : "moves"}
           </span>
         </div>
       </div>
@@ -49,6 +43,8 @@ export default function SidePanel({
           loadingMoves={loadingMoves}
           hasMore={hasMore}
           fetchMore={fetchMore}
+          selectedMove={selectedMove}
+          setSelectedMove={setSelectedMove}
         />
       </div>
     </div>
