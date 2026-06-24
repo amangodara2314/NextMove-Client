@@ -1,6 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
+import getGameResult from "../../utils/getGameResult";
+import { DEFAULT_TIME_SPENT } from "../../constants/pieces";
+import PromotionDialog from "./PromotionDialog";
+import GameOverOverlay from "./GameOverOverlay";
 
 export default function Board({
   boardWidth,

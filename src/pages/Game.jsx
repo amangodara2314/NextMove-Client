@@ -82,8 +82,8 @@ export default function Game() {
           />
         </div>
 
-        {/* ── Side panel (hidden on small screens) ── */}
-        <div className="hidden md:flex h-full items-stretch py-8">
+        {/* ── Side panel  ── */}
+        <div className="flex h-full items-stretch py-8">
           <SidePanel
             game={game}
             moves={moves}

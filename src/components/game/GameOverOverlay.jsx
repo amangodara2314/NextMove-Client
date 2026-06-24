@@ -1,6 +1,7 @@
-import { OUTCOME_STYLES, Particles } from "../../constants/gameStyles";
+import { OUTCOME_STYLES } from "../../constants/gameStyles";
+import Particles from "./Particles";
 
-function GameOverOverlay({ result }) {
+export default function GameOverOverlay({ result }) {
   const hasPlayedRef = useRef(false);
 
   useEffect(() => {
@@ -21,7 +22,7 @@ function GameOverOverlay({ result }) {
       {result.outcome === "win" && <Particles />}
 
       <div
-        className={`absolute inset-0 z-[200] flex items-center justify-center rounded-[6px] overflow-hidden ${s.backdrop} backdrop-blur-[3px]`}
+        className={`absolute inset-0 z-200 flex items-center justify-center rounded-[6px] overflow-hidden ${s.backdrop} backdrop-blur-[3px]`}
         style={{ animation: "gameover-backdrop 0.35s ease forwards" }}
       >
         {/* Glow ring around card */}

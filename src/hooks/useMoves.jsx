@@ -56,6 +56,23 @@ export default function useMoves(gameId) {
     };
   }, [gameId]);
 
+  useEffect(() => {
+    if (!gameId) return;
+
+    const onMoveMade = (data) => {
+      if (data.move) {
+        setMoves((prev) => [...prev, data.move]);
+        setCursor(data.moveNumber);
+      }
+    };
+
+    socket.on("MOVE_MADE", onMoveMade);
+
+    return () => {
+      socket.off("MOVE_MADE", onMoveMade);
+    };
+  }, [gameId]);
+
   return {
     moves,
     loadingMoves,
