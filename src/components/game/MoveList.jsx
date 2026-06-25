@@ -25,13 +25,13 @@ export default function MoveList({
     <div className="flex flex-col h-full">
       {/* Column headers */}
       <div className="flex items-center gap-1 px-3 py-1.5 border-b border-border/50 shrink-0">
-        <span className="w-8 text-[11px] font-semibold text-muted-foreground/60 uppercase tracking-wider">
+        <span className="w-8 text-xs text-muted-foreground uppercase tracking-wider">
           #
         </span>
-        <span className="flex-1 text-[11px] font-semibold text-muted-foreground/60 uppercase tracking-wider px-2">
+        <span className="flex-1 text-xs text-muted-foreground uppercase tracking-wider">
           White
         </span>
-        <span className="flex-1 text-[11px] font-semibold text-muted-foreground/60 uppercase tracking-wider px-2">
+        <span className="flex-1 text-xs text-muted-foreground uppercase tracking-wider">
           Black
         </span>
       </div>
@@ -58,7 +58,7 @@ export default function MoveList({
                 className="flex items-center gap-1 mb-0.5 rounded"
               >
                 {/* Move number */}
-                <span className="w-8 text-[11px] text-muted-foreground/50 font-mono shrink-0 px-1">
+                <span className="w-8 text-sm text-muted-foreground font-mono shrink-0 px-1">
                   {pair.num}.
                 </span>
                 <MoveCell

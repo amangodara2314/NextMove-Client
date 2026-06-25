@@ -181,29 +181,6 @@
   aspect-ratio: 1 / 1;
 }
 
-/* Animated left accent — Tailwind can't do ::before with animation */
-.player-active::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 12px;
-  bottom: 12px;
-  width: 2px;
-  border-radius: 2px;
-  background: #d4a847;
-  animation: active-bar 1.8s ease-in-out infinite;
-}
-
-.live-dot {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #22c55e;
-  flex-shrink: 0;
-  animation: live-dot 1.8s ease-in-out infinite;
-}
-
 html,
 body,
 #root {

@@ -16,16 +16,14 @@ export default function SidePanel({
     started.toLocaleDateString([], { month: "short", day: "numeric" });
 
   return (
-    <div className="flex flex-col w-64 shrink-0 h-full rounded-lg border border-border/60 bg-card/60 backdrop-blur-sm overflow-hidden">
+    <div className="flex flex-col shrink-0 pb-2 rounded-lg border border-border/60 bg-card/60 backdrop-blur-sm overflow-hidden">
       {/* Header */}
       <div className="px-4 py-3 border-b border-border/60 shrink-0">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-foreground tracking-tight">
-            Moves
-          </h2>
+          <h2 className="text-lg text-foreground tracking-tight">Moves</h2>
           <span
             className={[
-              "text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full",
+              "text-xs uppercase tracking-wider px-1.5 py-0.5 rounded-full",
               game.result
                 ? "bg-muted text-muted-foreground"
                 : "bg-emerald-500/15 text-emerald-400",
