@@ -13,8 +13,10 @@ export default function useMoves(gameId) {
   const fetchingRef = useRef(false);
   const hasConnectedOnceRef = useRef(false);
 
-  const fetchMoves = async () => {
+  const fetchMoves = async (resetStates) => {
     if (!gameId || !hasMore || fetchingRef.current) return;
+
+    console.log("reset states:", resetStates);
 
     fetchingRef.current = true;
 
@@ -24,9 +26,15 @@ export default function useMoves(gameId) {
       const result = await getMoves(gameId, cursor);
       const data = getResponseData(result);
 
-      setMoves((prev) => [...prev, ...data.moves]);
-      setCursor(data.nextCursor);
-      setHasMore(data.hasMore);
+      if (resetStates) {
+        setMoves(data.moves);
+        setCursor(data.nextCursor);
+        setHasMore(data.hasMore);
+      } else {
+        setMoves((prev) => [...data.moves, ...prev]);
+        setCursor(data.nextCursor);
+        setHasMore(data.hasMore);
+      }
     } catch (error) {
       if (error.code === "ERR_CANCELED") return;
       setMovesError(getErrorMessage(error));
@@ -46,7 +54,7 @@ export default function useMoves(gameId) {
         hasConnectedOnceRef.current = true;
         return;
       }
-      fetchMoves();
+      fetchMoves(true);
     };
 
     socket.on("connect", handleReconnect);
@@ -61,7 +69,7 @@ export default function useMoves(gameId) {
 
     const onMoveMade = (data) => {
       if (data.move) {
-        setMoves((prev) => [...prev, data.move]);
+        setMoves((prev) => [data.move, ...prev]);
         setCursor(data.moveNumber);
       }
     };

@@ -49,9 +49,9 @@ export default function Game() {
 
   return (
     <div className="min-h-full flex items-center justify-center bg-background overflow-hidden">
-      <div className="grid grid-cols-3 gap-0 w-full max-w-5xl h-full rounded-lg px-4 py-1 border border-border">
+      <div className="grid grid-cols-1 md:grid-cols-3 md:gap-6 w-full max-w-4xl h-full rounded-lg px-4 py-1 md:border md:border-border">
         {/* ── Board column ── */}
-        <div className="flex flex-col h-full items-start col-span-2">
+        <div className="flex flex-col h-full items-start md:col-span-2">
           <PlayerPanel
             player={oppPlayer}
             color={oppColor}
@@ -60,7 +60,7 @@ export default function Game() {
             borderSide="top"
           />
 
-          <div className="flex-1 min-h-0 flex items-center w-full">
+          <div className="flex-1 min-h-0 flex justify-center md:justify-start items-center w-full">
             <div className="board-inner">
               <Board
                 boardOrientation={myColor === "WHITE" ? "white" : "black"}
@@ -83,7 +83,7 @@ export default function Game() {
         </div>
 
         {/* ── Side panel  ── */}
-        <div className="py-2">
+        <div className="pt-4">
           <SidePanel
             game={game}
             moves={moves}
