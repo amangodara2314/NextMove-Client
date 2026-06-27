@@ -16,7 +16,7 @@ export default function SidePanel({
     started.toLocaleDateString([], { month: "short", day: "numeric" });
 
   return (
-    <div className="flex flex-col shrink-0 pb-2 rounded-lg border border-border/60 bg-card/60 backdrop-blur-sm overflow-hidden">
+    <div className="h-full flex flex-col min-h-0 border border-border rounded-lg">
       {/* Header */}
       <div className="px-4 py-3 border-b border-border/60 shrink-0">
         <div className="flex items-center justify-between">
@@ -35,7 +35,7 @@ export default function SidePanel({
       </div>
 
       {/* Move list */}
-      <div className="flex-1 min-h-0">
+      <div className="flex-1 min-h-0 overflow-hidden">
         <MoveList
           moves={moves}
           loadingMoves={loadingMoves}

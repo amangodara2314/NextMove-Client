@@ -48,10 +48,10 @@ export default function Game() {
   const oppActive = game.turn === oppColor;
 
   return (
-    <div className="min-h-full flex items-center justify-center bg-background overflow-hidden">
-      <div className="grid grid-cols-1 md:grid-cols-3 md:gap-6 w-full max-w-4xl h-full rounded-lg px-4 py-1 md:border md:border-border">
+    <div className="h-screen flex items-center justify-center bg-background overflow-hidden">
+      <div className="grid grid-cols-1 md:grid-cols-3 md:gap-6 w-full max-w-4xl h-[95vh] min-h-0 rounded-lg px-4 py-1 md:border md:border-border">
         {/* ── Board column ── */}
-        <div className="flex flex-col h-full items-start md:col-span-2">
+        <div className="flex flex-col h-full min-h-0 overflow-hidden md:col-span-2">
           <PlayerPanel
             player={oppPlayer}
             color={oppColor}
@@ -81,9 +81,7 @@ export default function Game() {
             borderSide="bottom"
           />
         </div>
-
-        {/* ── Side panel  ── */}
-        <div className="pt-4">
+        <div className="h-full min-h-0 overflow-hidden py-4">
           <SidePanel
             game={game}
             moves={moves}

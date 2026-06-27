@@ -13,7 +13,7 @@ export default function useMoves(gameId) {
   const fetchingRef = useRef(false);
   const hasConnectedOnceRef = useRef(false);
 
-  const fetchMoves = async (resetStates) => {
+  const fetchMoves = async (resetStates = false) => {
     if (!gameId || !hasMore || fetchingRef.current) return;
 
     console.log("reset states:", resetStates);
@@ -69,8 +69,7 @@ export default function useMoves(gameId) {
 
     const onMoveMade = (data) => {
       if (data.move) {
-        setMoves((prev) => [data.move, ...prev]);
-        setCursor(data.moveNumber);
+        setMoves((prev) => [...prev, data.move]);
       }
     };
 
@@ -86,7 +85,7 @@ export default function useMoves(gameId) {
     loadingMoves,
     movesError,
     hasMore,
-    fetchMore: fetchMoves,
+    fetchMore: () => fetchMoves(false),
     selectedMove,
     setSelectedMove,
   };

@@ -174,7 +174,6 @@
   }
 }
 
-/* Tailwind can't express min() with two different units in a single value */
 .board-inner {
   width: min(100%, calc(100dvh - 112px - 24px));
   height: min(100%, calc(100dvh - 112px - 24px));
