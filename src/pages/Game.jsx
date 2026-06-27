@@ -17,7 +17,7 @@ export default function Game() {
     fetchMore,
     selectedMove,
     setSelectedMove,
-  } = useMoves(gameId);
+  } = useMoves(gameId, game?.status === "ACTIVE");
 
   if (loading) {
     return (
@@ -48,8 +48,8 @@ export default function Game() {
   const oppActive = game.turn === oppColor;
 
   return (
-    <div className="h-screen flex items-center justify-center bg-background overflow-hidden">
-      <div className="grid grid-cols-1 md:grid-cols-3 md:gap-6 w-full max-w-4xl h-[95vh] min-h-0 rounded-lg px-4 py-1 md:border md:border-border">
+    <div className="md:h-screen flex items-center justify-center bg-background overflow-hidden">
+      <div className="grid grid-cols-1 md:grid-cols-3 md:gap-6 w-full max-w-4xl md:h-[95vh] min-h-0 rounded-lg px-4 py-1 md:border md:border-border">
         {/* ── Board column ── */}
         <div className="flex flex-col h-full min-h-0 overflow-hidden md:col-span-2">
           <PlayerPanel
@@ -81,7 +81,7 @@ export default function Game() {
             borderSide="bottom"
           />
         </div>
-        <div className="h-full min-h-0 overflow-hidden py-4">
+        <div className="h-76 md:h-full min-h-0 overflow-hidden md:p-4">
           <SidePanel
             game={game}
             moves={moves}

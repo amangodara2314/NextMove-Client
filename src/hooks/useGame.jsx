@@ -13,6 +13,7 @@ export default function useGame(gameId) {
     const res = await getGame(gameId, signal ? { signal } : undefined);
     const data = getResponseData(res);
     setGame(data.game);
+    return data.game;
   };
   useEffect(() => {
     if (!gameId) return;
@@ -20,7 +21,6 @@ export default function useGame(gameId) {
     const controller = new AbortController();
 
     const joinGame = (shouldSync = true) => {
-      console.log("Joining game:", gameId);
       socket.emit("JOIN_GAME", { gameId });
       if (shouldSync) {
         syncGame().catch((err) => {
@@ -33,8 +33,8 @@ export default function useGame(gameId) {
     const fetchInitial = async () => {
       try {
         setLoading(true);
-        await syncGame(controller.signal);
-        if (socket.connected) joinGame(false);
+        const gameData = await syncGame(controller.signal);
+        if (socket.connected && gameData.status === "ACTIVE") joinGame(false);
       } catch (err) {
         if (err.code === "ERR_CANCELED") return;
         setError(getErrorMessage(err));
@@ -45,7 +45,7 @@ export default function useGame(gameId) {
 
     fetchInitial();
 
-    socket.on("connect", joinGame);
+    if (game && game.status === "ACTIVE") socket.on("connect", joinGame);
 
     return () => {
       controller.abort();
@@ -66,6 +66,7 @@ export default function useGame(gameId) {
   }, [gameId]);
 
   const applyMoveUpdate = ({ fen, version, move }) => {
+    console.log("Applying move update:", { fen, version, move });
     setGame((prev) => {
       if (!prev) return prev;
       console.log("Previous game state:", prev);
@@ -95,6 +96,12 @@ export default function useGame(gameId) {
           }
           reject(response);
           return;
+        }
+        if (response?.gameOver) {
+          setGame((prev) => ({
+            ...prev,
+            status: response.gameStatus ?? prev.status,
+          }));
         }
         applyMoveUpdate({
           fen: response.fen,

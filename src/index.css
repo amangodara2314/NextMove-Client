@@ -185,3 +185,91 @@ body,
 #root {
   height: 100%;
 }
+
+@keyframes gameover-backdrop {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(3px);
+  }
+}
+
+@keyframes gameover-card {
+  0% {
+    opacity: 0;
+    transform: scale(0.7) translateY(20px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08) translateY(-4px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes gameover-icon {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) rotate(-20deg);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.15) rotate(8deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+
+@keyframes gameover-title {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glow-ring {
+  0%,
+  100% {
+    box-shadow: 0 0 0px var(--ring-color);
+  }
+  50% {
+    box-shadow:
+      0 0 25px var(--ring-color),
+      0 0 45px var(--ring-color);
+  }
+}
+
+.gameover-backdrop {
+  animation: gameover-backdrop 0.35s ease forwards;
+}
+
+.gameover-card {
+  animation: gameover-card 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.gameover-icon {
+  animation: gameover-icon 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
+}
+
+.gameover-title {
+  animation: gameover-title 0.4s ease both;
+}
+
+.gameover-subtitle {
+  animation: gameover-title 0.4s ease 0.45s both;
+}
+
+.glow-ring {
+  animation: glow-ring 2s ease-in-out 0.5s infinite;
+}

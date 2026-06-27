@@ -3,7 +3,7 @@ import { getErrorMessage, getResponseData } from "../utils/responseHelpers";
 import { getMoves } from "../services/game/gameServices";
 import socket from "../configs/socket";
 
-export default function useMoves(gameId) {
+export default function useMoves(gameId, isGameActive = false) {
   const [moves, setMoves] = useState([]);
   const [cursor, setCursor] = useState(null);
   const [loadingMoves, setLoadingMoves] = useState(false);
@@ -25,13 +25,18 @@ export default function useMoves(gameId) {
 
       const result = await getMoves(gameId, cursor);
       const data = getResponseData(result);
+      const fromDB = data.source === "db";
 
       if (resetStates) {
         setMoves(data.moves);
         setCursor(data.nextCursor);
         setHasMore(data.hasMore);
       } else {
-        setMoves((prev) => [...data.moves, ...prev]);
+        if (fromDB) {
+          setMoves((prev) => [...prev, ...data.moves]);
+        } else {
+          setMoves((prev) => [...data.moves, ...prev]);
+        }
         setCursor(data.nextCursor);
         setHasMore(data.hasMore);
       }
@@ -49,6 +54,7 @@ export default function useMoves(gameId) {
   }, [gameId]);
 
   useEffect(() => {
+    if (!isGameActive) return;
     const handleReconnect = () => {
       if (!hasConnectedOnceRef.current) {
         hasConnectedOnceRef.current = true;
@@ -68,6 +74,7 @@ export default function useMoves(gameId) {
     if (!gameId) return;
 
     const onMoveMade = (data) => {
+      console.log("move_made event received:", data);
       if (data.move) {
         setMoves((prev) => [...prev, data.move]);
       }

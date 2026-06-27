@@ -14,13 +14,14 @@ export default function MoveList({
 }) {
   const pairs = groupMovePairs(moves);
   const lastMoveIndex = moves.length - 1;
-  const bottomRef = useRef(null);
+  const viewportRef = useRef(null);
 
-  // Auto-scroll to bottom as new moves arrive
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    viewportRef.current?.scrollTo({
+      top: viewportRef.current.scrollHeight,
+      behavior: "smooth",
+    });
   }, [moves.length]);
-
   return (
     <div className="h-full max-h-full flex flex-col min-h-0">
       {/* Column headers */}
@@ -36,7 +37,8 @@ export default function MoveList({
         </span>
       </div>
       <div className="flex-1 min-h-0">
-        <ScrollArea className="h-full min-h-0">
+        <ScrollArea className="h-full" viewportRef={viewportRef}>
+          {" "}
           <div className="px-2 py-1">
             {/* Empty state */}
             {!loadingMoves && pairs.length === 0 && (
@@ -94,8 +96,6 @@ export default function MoveList({
                 Load earlier moves
               </button>
             )}
-
-            <div ref={bottomRef} />
           </div>
         </ScrollArea>
       </div>

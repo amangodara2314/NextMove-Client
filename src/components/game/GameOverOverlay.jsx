@@ -1,15 +1,19 @@
+import { useEffect, useRef } from "react";
 import { OUTCOME_STYLES } from "../../constants/gameStyles";
 import Particles from "./Particles";
+import playGameOverSound from "../../utils/gameSounds";
 
 export default function GameOverOverlay({ result }) {
   const hasPlayedRef = useRef(false);
 
   useEffect(() => {
     if (!result?.over || hasPlayedRef.current) return;
+
     hasPlayedRef.current = true;
-    injectStyles();
-    // Small delay so the board re-paint settles first
+
+    // Small delay so the board repaint settles first
     const t = setTimeout(() => playGameOverSound(result.outcome), 120);
+
     return () => clearTimeout(t);
   }, [result]);
 
@@ -22,40 +26,30 @@ export default function GameOverOverlay({ result }) {
       {result.outcome === "win" && <Particles />}
 
       <div
-        className={`absolute inset-0 z-200 flex items-center justify-center rounded-[6px] overflow-hidden ${s.backdrop} backdrop-blur-[3px]`}
-        style={{ animation: "gameover-backdrop 0.35s ease forwards" }}
+        className={`absolute inset-0 z-[200] flex items-center justify-center rounded-[6px] overflow-hidden gameover-backdrop ${s.backdrop}`}
       >
-        {/* Glow ring around card */}
+        {/* Glow ring */}
         <div
-          className="relative flex items-center justify-center"
+          className="relative flex items-center justify-center glow-ring"
           style={{
             "--ring-color": s.ring,
             borderRadius: "1.25rem",
-            animation: "glow-ring 2s ease-in-out 0.5s infinite",
           }}
         >
+          {/* Main card */}
           <div
-            className={`flex flex-col items-center gap-4 px-12 py-9 rounded-2xl shadow-2xl border text-center select-none ${s.card}`}
-            style={{
-              animation:
-                "gameover-card 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards",
-            }}
+            className={`gameover-card flex flex-col items-center gap-4 px-12 py-9 rounded-2xl shadow-2xl border text-center select-none ${s.card}`}
           >
             {/* Icon */}
             <span
-              className={`text-6xl leading-none font-bold ${s.iconColor}`}
-              style={{
-                animation:
-                  "gameover-icon 0.55s cubic-bezier(0.34,1.56,0.64,1) 0.1s both",
-              }}
+              className={`gameover-icon text-6xl leading-none font-bold ${s.iconColor}`}
             >
               {result.icon}
             </span>
 
             {/* Title */}
             <h2
-              className={`text-4xl font-bold tracking-tight ${s.titleColor}`}
-              style={{ animation: "gameover-title 0.4s ease 0.3s both" }}
+              className={`gameover-title text-4xl font-bold tracking-tight ${s.titleColor}`}
             >
               {result.title}
             </h2>
@@ -63,8 +57,7 @@ export default function GameOverOverlay({ result }) {
             {/* Subtitle */}
             {result.subtitle && (
               <p
-                className={`text-xs font-semibold uppercase tracking-[0.2em] ${s.subtitleColor}`}
-                style={{ animation: "gameover-title 0.4s ease 0.45s both" }}
+                className={`gameover-subtitle text-xs font-semibold uppercase tracking-[0.2em] ${s.subtitleColor}`}
               >
                 {result.subtitle}
               </p>
