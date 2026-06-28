@@ -14,7 +14,7 @@ export default function MoveCell({
       ? { label: "+", cls: "bg-amber-500/20 text-amber-400" }
       : null;
   const handleClick = () => {
-    onClick(move);
+    onClick({ ...move, isLast });
   };
   return (
     <span

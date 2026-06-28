@@ -14,6 +14,7 @@ export default function Board({
   version,
   onMove,
   canMove,
+  selectedMove,
 }) {
   const [game, setGame] = useState(() => new Chess());
   const [moveFrom, setMoveFrom] = useState("");
@@ -239,6 +240,14 @@ export default function Board({
     ? (game.get(pendingPromotion.to)?.color ?? boardOrientation[0])
     : null;
 
+  let showGameOverOverlay = false;
+  if (!selectedMove) {
+    showGameOverOverlay = !!gameResult;
+  } else {
+    showGameOverOverlay =
+      selectedMove.isCheckmate || selectedMove.isStalemate ? true : false;
+  }
+
   return (
     <div ref={boardRef} className="relative inline-block">
       {pendingPromotion && (
@@ -252,7 +261,7 @@ export default function Board({
         />
       )}
 
-      {gameResult && <GameOverOverlay result={gameResult} />}
+      {showGameOverOverlay && <GameOverOverlay result={gameResult} />}
 
       <Chessboard
         options={{

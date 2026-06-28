@@ -88,7 +88,7 @@ export default function MoveList({
               ))}
 
             {/* Load more */}
-            {hasMore && !loadingMoves && (
+            {hasMore && !loadingMoves && moves.length > 0 && (
               <button
                 onClick={fetchMore}
                 className="w-full mt-1 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-accent/50 rounded transition-colors"

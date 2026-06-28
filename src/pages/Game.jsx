@@ -65,7 +65,10 @@ export default function Game() {
               <Board
                 boardOrientation={myColor === "WHITE" ? "white" : "black"}
                 position={selectedMove?.fenAfter || game.fen}
-                canMove={selectedMove ? false : myActive}
+                canMove={
+                  selectedMove && !selectedMove?.isLast ? false : myActive
+                }
+                selectedMove={selectedMove}
                 version={game.version}
                 gameId={game.id}
                 onMove={handleMove}

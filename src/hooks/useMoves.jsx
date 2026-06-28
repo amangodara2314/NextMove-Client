@@ -32,11 +32,7 @@ export default function useMoves(gameId, isGameActive = false) {
         setCursor(data.nextCursor);
         setHasMore(data.hasMore);
       } else {
-        if (fromDB) {
-          setMoves((prev) => [...prev, ...data.moves]);
-        } else {
-          setMoves((prev) => [...data.moves, ...prev]);
-        }
+        setMoves((prev) => [...data.moves, ...prev]);
         setCursor(data.nextCursor);
         setHasMore(data.hasMore);
       }
