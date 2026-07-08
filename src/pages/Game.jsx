@@ -72,6 +72,9 @@ export default function Game() {
                 version={game.version}
                 gameId={game.id}
                 onMove={handleMove}
+                gameStatus={game.status}
+                abortedBy={game.abortedBy}
+                myColor={myColor}
               />
             </div>
           </div>

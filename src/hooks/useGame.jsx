@@ -58,19 +58,46 @@ export default function useGame(gameId) {
 
     const onMoveMade = (data) => applyMoveUpdate(data);
 
-    socket.on("MOVE_MADE", onMoveMade);
+    const onGameAborted = (data) => {
+      toast.error(data.message || "This game has been aborted by opponent");
+      setGame((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          status: "ABORTED",
+          abortedBy: data?.abortedBy,
+        };
+      });
+    };
 
+    const playerReconnected = (data) => {
+      toast.success(data.message || "Your opponent has reconnected");
+      const updatedData =
+        data.color === "WHITE"
+          ? { whiteConnected: true }
+          : { blackConnected: true };
+      setGame((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          ...updatedData,
+        };
+      });
+    };
+
+    socket.on("MOVE_MADE", onMoveMade);
+    socket.on("GAME_ABORTED", onGameAborted);
+    socket.on("PLAYER_RECONNECTED", playerReconnected);
     return () => {
       socket.off("MOVE_MADE", onMoveMade);
+      socket.off("GAME_ABORTED", onGameAborted);
+      socket.off("PLAYER_RECONNECTED", playerReconnected);
     };
   }, [gameId]);
 
   const applyMoveUpdate = ({ fen, version, move }) => {
-    console.log("Applying move update:", { fen, version, move });
     setGame((prev) => {
       if (!prev) return prev;
-      console.log("Previous game state:", prev);
-      console.log("New FEN:", fen, "New version:", version);
       return {
         ...prev,
         fen,

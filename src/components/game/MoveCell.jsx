@@ -1,4 +1,5 @@
 import { pieceSymbol } from "../../constants/pieces";
+import { cn } from "@/lib/utils";
 
 export default function MoveCell({
   move,
@@ -6,47 +7,45 @@ export default function MoveCell({
   isSelected,
   onClick = () => {},
 }) {
-  if (!move) return <span className="flex-1 px-2 py-1.5 text-sm font-mono" />;
+  if (!move)
+    return <div className="h-7 flex-1 rounded px-2" aria-hidden="true" />;
 
   const badge = move.isCheckmate
-    ? { label: "#", cls: "bg-red-500/20 text-red-400" }
+    ? { label: "#", className: "bg-destructive/15 text-destructive" }
     : move.isCheck
-      ? { label: "+", cls: "bg-amber-500/20 text-amber-400" }
+      ? { label: "+", className: "bg-board-accent/15 text-board-accent" }
       : null;
-  const handleClick = () => {
-    onClick({ ...move, isLast });
-  };
+
   return (
-    <span
-      onClick={handleClick}
-      className={[
-        "flex-1 flex items-center gap-1.5 px-2 py-1.5 rounded text-sm font-mono",
-        "transition-colors duration-100 select-none",
+    <button
+      type="button"
+      onClick={() => onClick({ ...move, isLast })}
+      className={cn(
+        "flex h-7 flex-1 items-center gap-1.5 rounded px-2 font-mono text-sm transition-colors",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
         isLast
-          ? "bg-[#B58863]/20 text-foreground font-semibold"
+          ? "bg-board-accent/15 font-semibold text-foreground"
           : isSelected
             ? "bg-accent text-accent-foreground"
-            : "text-muted-foreground hover:text-foreground hover:bg-accent/50 cursor-default",
-      ].join(" ")}
+            : "text-muted-foreground hover:bg-accent/50 hover:text-foreground",
+      )}
     >
-      {/* Piece glyph */}
       {pieceSymbol(move.piece) && (
-        <span className="text-[#B58863] text-xs font-bold">
+        <span className="text-xs font-bold text-board-accent">
           {pieceSymbol(move.piece)}
         </span>
       )}
-      {/* SAN notation */}
       <span>{move.san}</span>
-      {/* Check / checkmate badge */}
       {badge && (
-        <span className={`text-[10px] font-bold px-1 rounded ${badge.cls}`}>
+        <span
+          className={cn("rounded px-1 text-[10px] font-bold", badge.className)}
+        >
           {badge.label}
         </span>
       )}
-      {/* Capture dot */}
       {move.captured && (
-        <span className="ml-auto text-[10px] text-rose-400 opacity-70">×</span>
+        <span className="ml-auto text-[10px] text-destructive/70">×</span>
       )}
-    </span>
+    </button>
   );
 }

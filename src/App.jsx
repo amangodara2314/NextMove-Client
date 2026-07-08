@@ -35,7 +35,7 @@ export default function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="nextmove-ui-theme">
       <Router />
-      <Toaster />
+      <Toaster richColors />
     </ThemeProvider>
   );
 }
