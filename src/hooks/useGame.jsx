@@ -59,6 +59,7 @@ export default function useGame(gameId) {
     const onMoveMade = (data) => applyMoveUpdate(data);
 
     const onGameAborted = (data) => {
+      console.log("Game aborted:", data);
       toast.error(data.message || "This game has been aborted by opponent");
       setGame((prev) => {
         if (!prev) return prev;
