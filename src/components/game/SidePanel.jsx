@@ -6,6 +6,7 @@ import StatusBadge from "./StatusBadge";
 export default function SidePanel({
   game,
   moves,
+  myColor,
   loadingMoves,
   hasMore,
   fetchMore,
@@ -32,6 +33,8 @@ export default function SidePanel({
       <div className="flex-1 min-h-0 overflow-hidden">
         <MoveList
           moves={moves}
+          myColor={myColor}
+          status={game.status}
           loadingMoves={loadingMoves}
           hasMore={hasMore}
           fetchMore={fetchMore}
@@ -42,14 +45,16 @@ export default function SidePanel({
       </div>
 
       {/* Draw and Resign buttons */}
-      <div className="flex flex-col gap-3 px-3 py-3">
-        <Button>
-          Resign <Flag />
-        </Button>
-        <Button>
-          Offer Draw <Handshake />
-        </Button>
-      </div>
+      {game.status === "ACTIVE" && (
+        <div className="flex flex-col gap-3 px-3 py-3">
+          <Button>
+            Resign <Flag />
+          </Button>
+          <Button>
+            Offer Draw <Handshake />
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

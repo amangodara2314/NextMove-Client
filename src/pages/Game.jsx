@@ -50,6 +50,7 @@ export default function Game() {
     borderSide: "top",
     isConnected:
       (myColor === "WHITE" ? game.blackConnected : game.whiteConnected) ?? true,
+    gameStatus: game.status,
   };
 
   const myProps = {
@@ -60,6 +61,7 @@ export default function Game() {
     borderSide: "bottom",
     isConnected:
       (myColor === "WHITE" ? game.whiteConnected : game.blackConnected) ?? true,
+    gameStatus: game.status,
   };
 
   return (
@@ -96,6 +98,7 @@ export default function Game() {
           <SidePanel
             game={game}
             moves={moves}
+            myColor={myColor}
             loadingMoves={loadingMoves}
             hasMore={hasMore}
             fetchMore={fetchMore}

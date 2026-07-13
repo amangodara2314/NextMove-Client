@@ -7,13 +7,14 @@ function PlayerPanel({
   isYou,
   borderSide,
   isConnected,
+  gameStatus,
 }) {
   return (
     <div className="relative h-14 shrink-0 flex items-center gap-2 ml-1">
       <div className="relative shrink-0">
         <Avatar
           className={[
-            active ? "ring-1 ring-primary" : "",
+            active && gameStatus === "ACTIVE" ? "ring-1 ring-primary" : "",
             !isConnected ? "grayscale opacity-50" : "",
           ].join(" ")}
           size="lg"
@@ -24,18 +25,20 @@ function PlayerPanel({
         </Avatar>
 
         {/* presence dot, bottom-right of avatar */}
-        <span className="absolute -bottom-0.5 -right-0.5 flex h-3 w-3">
-          {!isConnected && (
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75" />
-          )}
-          <span
-            title={isConnected ? "Connected" : "Disconnected"}
-            className={[
-              "relative inline-flex h-3 w-3 rounded-full ring-2 ring-background",
-              isConnected ? "bg-emerald-500" : "bg-destructive",
-            ].join(" ")}
-          />
-        </span>
+        {gameStatus === "ACTIVE" && (
+          <span className="absolute -bottom-0.5 -right-0.5 flex h-3 w-3">
+            {!isConnected && (
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75" />
+            )}
+            <span
+              title={isConnected ? "Connected" : "Disconnected"}
+              className={[
+                "relative inline-flex h-3 w-3 rounded-full ring-2 ring-background",
+                isConnected ? "bg-emerald-500" : "bg-destructive",
+              ].join(" ")}
+            />
+          </span>
+        )}
       </div>
 
       <div className="space-x-0">

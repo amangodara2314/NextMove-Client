@@ -8,11 +8,13 @@ import MoveCell from "./MoveCell";
 
 export default function MoveList({
   moves,
+  myColor,
   loadingMoves,
   hasMore,
   fetchMore,
   selectedMove,
   setSelectedMove,
+  status = "ACTIVE",
 }) {
   const pairs = groupMovePairs(moves);
   const lastMoveIndex = moves.length - 1;
@@ -45,9 +47,18 @@ export default function MoveList({
             {!loadingMoves && pairs.length === 0 && (
               <div className="flex flex-col items-center justify-center gap-2 py-12 text-center">
                 <span className="text-2xl text-muted-foreground/40">♟</span>
-                <p className="text-sm text-muted-foreground">
-                  No moves yet — make the first one.
-                </p>
+                {status === "ACTIVE" ? (
+                  <p className="text-sm text-muted-foreground">
+                    No moves yet –{" "}
+                    {myColor === "WHITE"
+                      ? "make the first move"
+                      : "waiting for your opponent"}
+                  </p>
+                ) : (
+                  <p className="text-sm text-muted-foreground">
+                    No moves were made in this game.
+                  </p>
+                )}
               </div>
             )}
 
