@@ -15,6 +15,7 @@ export default function useGame(gameId) {
     setGame(data.game);
     return data.game;
   };
+
   useEffect(() => {
     if (!gameId) return;
 
@@ -150,5 +151,6 @@ export default function useGame(gameId) {
       });
     });
   };
+
   return { game, loading, error, setGame, handleMove };
 }

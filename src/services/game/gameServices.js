@@ -9,4 +9,8 @@ const getMoves = (gameId, cursor, signal) => {
   return api.get(endpoints.game.GET_MOVES(gameId, cursor), { signal });
 };
 
-export { getGame, getMoves };
+const getTimeControlSettings = () => {
+  return api.get(endpoints.game.GET_TIME_CONTROL_SETTINGS);
+};
+
+export { getGame, getMoves, getTimeControlSettings };
