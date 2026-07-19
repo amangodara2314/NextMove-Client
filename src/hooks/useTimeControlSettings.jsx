@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { getTimeControlSettings } from "../services/game/gameServices";
 import { getErrorMessage, getResponseData } from "../utils/responseHelpers";
+import { getTimeControlSettings } from "../services/matchmaking/matchmakingServices";
 
 export default function useTimeControlSettings() {
   const [type, setType] = useState("");
@@ -29,5 +29,13 @@ export default function useTimeControlSettings() {
     fetchTimeControlSettings();
   }, []);
 
-  return { type, setType, types, settings, loadingSettings, error };
+  return {
+    type,
+    setType,
+    types,
+    settings,
+    loadingSettings,
+    error,
+    fetchTimeControlSettings,
+  };
 }

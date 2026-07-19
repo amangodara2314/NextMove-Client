@@ -10,13 +10,11 @@ import {
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getErrorMessage, getResponseData } from "../utils/responseHelpers";
-import { newGame } from "../services/matchmaking/matchmakingServices";
 import Loader from "../components/Loader";
 import { cn } from "../lib/utils";
-import socket from "../configs/socket";
 import { useNavigate } from "react-router-dom";
 import useTimeControlSettings from "../hooks/useTimeControlSettings";
+import useMatchmaking from "../hooks/useMatchmaking";
 
 const CATEGORY_META = {
   BULLET: { icon: Zap, label: "Bullet" },
@@ -30,11 +28,6 @@ function formatIncrement(increment) {
 }
 
 export default function Matchmaking() {
-  const [error, setError] = useState(null);
-  const [noMatchFound, setNoMatchFound] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
-  const [selectedControl, setSelectedControl] = useState(null);
-
   const {
     type,
     setType,
@@ -42,7 +35,19 @@ export default function Matchmaking() {
     settings,
     loadingSettings,
     error: settingsError,
+    fetchTimeControlSettings,
   } = useTimeControlSettings();
+
+  const {
+    error,
+    noMatchFound,
+    isSearching,
+    selectedControl,
+    startMatchmaking,
+    cancelSearch,
+    retrySearch,
+    backToSelection,
+  } = useMatchmaking();
 
   const navigate = useNavigate();
 
@@ -52,69 +57,6 @@ export default function Matchmaking() {
       setType(types[1]);
     }
   }, [types, type, setType]);
-
-  useEffect(() => {
-    const handleMatchFound = (data) => {
-      socket.emit("MATCH_ACK", { reservationId: data.reservationId });
-    };
-
-    const handleNoMatchFound = () => {
-      setIsSearching(false);
-      setNoMatchFound(true);
-    };
-
-    const handleMatchReady = (data) => {
-      navigate(`/game/${data.gameId}`, { replace: true });
-    };
-
-    socket.on("MATCH_FOUND", handleMatchFound);
-    socket.on("NO_MATCH_FOUND", handleNoMatchFound);
-    socket.on("MATCH_READY", handleMatchReady);
-
-    return () => {
-      socket.off("MATCH_FOUND", handleMatchFound);
-      socket.off("NO_MATCH_FOUND", handleNoMatchFound);
-      socket.off("MATCH_READY", handleMatchReady);
-      socket.emit("CANCEL_MATCHMAKING");
-    };
-  }, [navigate]);
-
-  const startMatchmaking = async (control) => {
-    setError(null);
-    setNoMatchFound(false);
-    setSelectedControl(control);
-    setIsSearching(true);
-
-    try {
-      const response = await newGame({
-        timeControl: control.timeControl,
-      });
-      const data = getResponseData(response);
-      if (data?.gameId) {
-        navigate(`/game/${data.gameId}`, { replace: true });
-      }
-    } catch (err) {
-      setError(getErrorMessage(err));
-      setIsSearching(false);
-    }
-  };
-
-  const cancelSearch = () => {
-    socket.emit("CANCEL_MATCHMAKING");
-    setIsSearching(false);
-    setSelectedControl(null);
-  };
-
-  const retrySearch = () => {
-    setNoMatchFound(false);
-    if (selectedControl) startMatchmaking(selectedControl);
-  };
-
-  const backToSelection = () => {
-    setNoMatchFound(false);
-    setError(null);
-    setSelectedControl(null);
-  };
 
   // Loading time control settings
   if (!settings && loadingSettings) {
@@ -144,7 +86,7 @@ export default function Matchmaking() {
           <Button
             variant="outline"
             className="rounded-xl px-6 mt-2"
-            onClick={() => window.location.reload()}
+            onClick={fetchTimeControlSettings}
           >
             Try Again
           </Button>
