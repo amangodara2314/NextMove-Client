@@ -51,6 +51,7 @@ export default function Game() {
     isConnected:
       (myColor === "WHITE" ? game.blackConnected : game.whiteConnected) ?? true,
     gameStatus: game.status,
+    timeLeft: myColor === "WHITE" ? game.blackTimeLeft : game.whiteTimeLeft,
   };
 
   const myProps = {
@@ -62,6 +63,7 @@ export default function Game() {
     isConnected:
       (myColor === "WHITE" ? game.whiteConnected : game.blackConnected) ?? true,
     gameStatus: game.status,
+    timeLeft: myColor === "WHITE" ? game.whiteTimeLeft : game.blackTimeLeft,
   };
 
   return (
