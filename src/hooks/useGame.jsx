@@ -11,7 +11,30 @@ export default function useGame(gameId) {
 
   const syncGame = async (signal) => {
     const res = await getGame(gameId, signal ? { signal } : undefined);
-    const data = getResponseData(res);
+    let data = getResponseData(res);
+    if (data.game.status === "ACTIVE") {
+      const now = Date.now();
+
+      const turn = data.game.turn;
+      const lastMoveAt =
+        data.game.version === 0
+          ? new Date(data.game.createdAt).getTime()
+          : new Date(data.game.lastMoveAt).getTime();
+
+      const timeTakenByPlayer = now - lastMoveAt;
+      if (data.game.turn === "WHITE") {
+        data.game.whiteTimeLeft = Math.max(
+          0,
+          data.game.whiteTimeLeft - timeTakenByPlayer,
+        );
+      } else {
+        data.game.blackTimeLeft = Math.max(
+          0,
+          data.game.blackTimeLeft - timeTakenByPlayer,
+        );
+      }
+    }
+
     setGame(data.game);
     return data.game;
   };
@@ -38,6 +61,7 @@ export default function useGame(gameId) {
         if (socket.connected && gameData.status === "ACTIVE") joinGame(false);
       } catch (err) {
         if (err.code === "ERR_CANCELED") return;
+        console.log("Error fetching game:", err);
         setError(getErrorMessage(err));
       } finally {
         if (!controller.signal.aborted) setLoading(false);
@@ -107,7 +131,13 @@ export default function useGame(gameId) {
     };
   }, [gameId]);
 
-  const applyMoveUpdate = ({ fen, version, move }) => {
+  const applyMoveUpdate = ({
+    fen,
+    version,
+    move,
+    whiteTimeLeft,
+    blackTimeLeft,
+  }) => {
     setGame((prev) => {
       if (!prev) return prev;
       return {
@@ -116,6 +146,8 @@ export default function useGame(gameId) {
         version,
         turn: fen.split(" ")[1] === "w" ? "WHITE" : "BLACK",
         lastMove: move,
+        whiteTimeLeft,
+        blackTimeLeft,
       };
     });
   };
@@ -146,6 +178,8 @@ export default function useGame(gameId) {
           fen: response.fen,
           version: response.version,
           move: response.move,
+          whiteTimeLeft: response.whiteTimeLeft,
+          blackTimeLeft: response.blackTimeLeft,
         });
         resolve(response);
       });

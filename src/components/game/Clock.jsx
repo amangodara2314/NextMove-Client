@@ -18,7 +18,7 @@ function formatTime(ms) {
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
 
-function ChessClock({ timeLeft = 0, isRunning = false }) {
+function Clock({ timeLeft = 0, isRunning = false }) {
   const [displayTime, setDisplayTime] = useState(timeLeft);
   const lastTickRef = useRef(Date.now());
 
@@ -63,4 +63,4 @@ function ChessClock({ timeLeft = 0, isRunning = false }) {
   );
 }
 
-export default ChessClock;
+export default Clock;
