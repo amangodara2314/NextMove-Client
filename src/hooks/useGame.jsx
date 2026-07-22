@@ -12,29 +12,6 @@ export default function useGame(gameId) {
   const syncGame = async (signal) => {
     const res = await getGame(gameId, signal ? { signal } : undefined);
     let data = getResponseData(res);
-    if (data.game.status === "ACTIVE") {
-      const now = Date.now();
-
-      const turn = data.game.turn;
-      const lastMoveAt =
-        data.game.version === 0
-          ? new Date(data.game.createdAt).getTime()
-          : new Date(data.game.lastMoveAt).getTime();
-
-      const timeTakenByPlayer = now - lastMoveAt;
-      if (data.game.turn === "WHITE") {
-        data.game.whiteTimeLeft = Math.max(
-          0,
-          data.game.whiteTimeLeft - timeTakenByPlayer,
-        );
-      } else {
-        data.game.blackTimeLeft = Math.max(
-          0,
-          data.game.blackTimeLeft - timeTakenByPlayer,
-        );
-      }
-    }
-
     setGame(data.game);
     return data.game;
   };
