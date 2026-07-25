@@ -5,7 +5,7 @@ import getGameResult from "../../utils/getGameResult";
 import { DEFAULT_TIME_SPENT } from "../../constants/pieces";
 import PromotionDialog from "./PromotionDialog";
 import GameOverOverlay from "./GameOverOverlay";
-import AbortedOverlay from "./AbortedOverlay";
+import EndOverlay from "./EndOverlay";
 
 export default function Board({
   boardWidth,
@@ -19,6 +19,7 @@ export default function Board({
   gameStatus,
   abortedBy,
   myColor,
+  timedOutBy,
 }) {
   const [game, setGame] = useState(() => new Chess());
   const [moveFrom, setMoveFrom] = useState("");
@@ -30,6 +31,8 @@ export default function Board({
 
   const isAborted = gameStatus === "ABORTED";
   const abortedByYou = isAborted && abortedBy === myColor;
+  const isTimeout = gameStatus === "TIMEOUT";
+  const isGameEnded = isAborted || isTimeout;
 
   useEffect(() => {
     if (!boardRef.current) return;
@@ -202,7 +205,7 @@ export default function Board({
   }
 
   function onPieceDrop({ sourceSquare, targetSquare }) {
-    if (isAborted || pendingPromotion || gameResult || !canMove) return false;
+    if (isGameEnded || pendingPromotion || gameResult || !canMove) return false;
 
     if (isPromotionMove(sourceSquare, targetSquare, game)) {
       openPromotionDialog(sourceSquare, targetSquare);
@@ -232,7 +235,7 @@ export default function Board({
   }
 
   function canDragPiece({ piece }) {
-    if (isAborted || pendingPromotion || gameResult || !canMove) return false;
+    if (isGameEnded || pendingPromotion || gameResult || !canMove) return false;
     const pieceColor = piece.pieceType[0];
     return (
       pieceColor === game.turn() &&
@@ -248,7 +251,7 @@ export default function Board({
     : null;
 
   let showGameOverOverlay = false;
-  if (!isAborted) {
+  if (!isGameEnded) {
     if (!selectedMove) {
       showGameOverOverlay = !!gameResult;
     } else {
@@ -257,9 +260,11 @@ export default function Board({
     }
   }
 
+  const showEndOverlay = isGameEnded && !selectedMove;
+
   return (
     <div ref={boardRef} className="relative inline-block">
-      {pendingPromotion && !isAborted && (
+      {pendingPromotion && !isGameEnded && (
         <PromotionDialog
           squareSize={squareSize}
           file={promotionFile}
@@ -270,11 +275,16 @@ export default function Board({
         />
       )}
 
-      {isAborted && <AbortedOverlay abortedByYou={abortedByYou} />}
-
-      {!isAborted && showGameOverOverlay && (
-        <GameOverOverlay result={gameResult} />
+      {showEndOverlay && (
+        <EndOverlay
+          type={gameStatus}
+          abortedBy={abortedBy}
+          timedOutBy={timedOutBy}
+          myColor={myColor}
+        />
       )}
+
+      {showGameOverOverlay && <GameOverOverlay result={gameResult} />}
 
       <Chessboard
         options={{

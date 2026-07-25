@@ -66,6 +66,7 @@ export default function Game() {
     timeLeft: myColor === "WHITE" ? game.whiteTimeLeft : game.blackTimeLeft,
   };
 
+  const timedOutBy = game.result === "BLACK" ? "WHITE" : "BLACK";
   return (
     <div className="md:h-screen flex items-center justify-center bg-background overflow-hidden">
       <div className="grid grid-cols-1 md:grid-cols-3 md:gap-6 w-full max-w-4xl md:h-[95vh] min-h-0 rounded-lg px-4 py-1 md:border md:border-border">
@@ -90,6 +91,7 @@ export default function Game() {
                 gameStatus={game.status}
                 abortedBy={game.abortedBy}
                 myColor={myColor}
+                timedOutBy={timedOutBy}
               />
             </div>
           </div>

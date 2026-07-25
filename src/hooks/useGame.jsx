@@ -86,7 +86,7 @@ export default function useGame(gameId) {
       });
     };
 
-    const playerDisconnected = (data) => {
+    const updateGame = (data) => {
       setGame((prev) => {
         if (!prev) return prev;
         return {
@@ -99,12 +99,14 @@ export default function useGame(gameId) {
     socket.on("MOVE_MADE", onMoveMade);
     socket.on("GAME_ABORTED", onGameAborted);
     socket.on("PLAYER_RECONNECTED", playerReconnected);
-    socket.on("PLAYER_DISCONNECTED", playerDisconnected);
+    socket.on("PLAYER_DISCONNECTED", updateGame);
+    socket.on("PLAYER_TIMEOUT", updateGame);
     return () => {
       socket.off("MOVE_MADE", onMoveMade);
       socket.off("GAME_ABORTED", onGameAborted);
       socket.off("PLAYER_RECONNECTED", playerReconnected);
-      socket.off("PLAYER_DISCONNECTED", playerDisconnected);
+      socket.off("PLAYER_DISCONNECTED", updateGame);
+      socket.off("PLAYER_TIMEOUT", updateGame);
     };
   }, [gameId]);
 
