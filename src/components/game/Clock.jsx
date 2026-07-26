@@ -18,9 +18,16 @@ function formatTime(ms) {
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
 
-function Clock({ timeLeft = 0, isRunning = false }) {
+function Clock({
+  timeLeft = 0,
+  isRunning = false,
+  verifyPlayerTimeout,
+  verifyingPlayerTimeout,
+  isYou = false,
+}) {
   const [displayTime, setDisplayTime] = useState(timeLeft);
   const lastTickRef = useRef(Date.now());
+  const intervalRef = useRef(null);
 
   useEffect(() => {
     setDisplayTime(timeLeft);
@@ -31,15 +38,26 @@ function Clock({ timeLeft = 0, isRunning = false }) {
     if (!isRunning) return;
 
     lastTickRef.current = Date.now();
-    const interval = setInterval(() => {
+    const interval = setInterval(async () => {
       const now = Date.now();
       const elapsed = now - lastTickRef.current;
       lastTickRef.current = now;
       setDisplayTime((prev) => Math.max(0, prev - elapsed));
     }, 100);
 
+    intervalRef.current = interval;
+
     return () => clearInterval(interval);
   }, [isRunning]);
+
+  useEffect(() => {
+    if (isYou || displayTime > 0) return;
+
+    verifyPlayerTimeout?.();
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+  }, [displayTime, isYou]);
 
   const isLow = displayTime <= LOW_TIME_MS;
   const isCritical = displayTime <= CRITICAL_TIME_MS;

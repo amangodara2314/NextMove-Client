@@ -11,6 +11,8 @@ function PlayerPanel({
   isConnected,
   gameStatus,
   timeLeft = 0, // in ms
+  verifyingPlayerTimeout,
+  verifyPlayerTimeout,
 }) {
   const isRunning = active && gameStatus === "ACTIVE";
 
@@ -82,7 +84,13 @@ function PlayerPanel({
         )}
       </div>
 
-      <Clock timeLeft={timeLeft} isRunning={isRunning} />
+      <Clock
+        timeLeft={timeLeft}
+        isRunning={isRunning}
+        verifyPlayerTimeout={verifyPlayerTimeout}
+        verifyingPlayerTimeout={verifyingPlayerTimeout}
+        isYou={isYou}
+      />
     </div>
   );
 }

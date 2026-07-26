@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getGame } from "../services/game/gameServices";
+import { checkPlayerTimeout, getGame } from "../services/game/gameServices";
 import { getErrorMessage, getResponseData } from "../utils/responseHelpers";
 import socket from "../configs/socket";
 import { toast } from "sonner";
@@ -8,12 +8,32 @@ export default function useGame(gameId) {
   const [game, setGame] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [verifyingPlayerTimeout, setVerifyingPlayerTimeout] = useState(false);
 
   const syncGame = async (signal) => {
     const res = await getGame(gameId, signal ? { signal } : undefined);
     let data = getResponseData(res);
     setGame(data.game);
     return data.game;
+  };
+
+  const verifyPlayerTimeout = async () => {
+    try {
+      setVerifyingPlayerTimeout(true);
+      const res = await checkPlayerTimeout(gameId);
+      const data = getResponseData(res);
+      setGame((prev) => {
+        return {
+          ...prev,
+          ...data,
+        };
+      });
+    } catch (error) {
+      const message = getErrorMessage(error);
+      toast.error(message);
+    } finally {
+      setVerifyingPlayerTimeout(false);
+    }
   };
 
   useEffect(() => {
@@ -165,5 +185,13 @@ export default function useGame(gameId) {
     });
   };
 
-  return { game, loading, error, setGame, handleMove };
+  return {
+    game,
+    loading,
+    error,
+    verifyingPlayerTimeout,
+    setGame,
+    handleMove,
+    verifyPlayerTimeout,
+  };
 }

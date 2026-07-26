@@ -9,4 +9,8 @@ const getMoves = (gameId, cursor, signal) => {
   return api.get(endpoints.game.GET_MOVES(gameId, cursor), { signal });
 };
 
-export { getGame, getMoves };
+const checkPlayerTimeout = (gameId) => {
+  return api.get(endpoints.game.CHECK_PLAYER_TIMEOUT(gameId));
+};
+
+export { getGame, getMoves, checkPlayerTimeout };

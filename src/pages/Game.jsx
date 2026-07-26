@@ -9,7 +9,14 @@ import SidePanel from "../components/game/SidePanel";
 
 export default function Game() {
   const { gameId } = useParams();
-  const { game, loading, error, handleMove } = useGame(gameId);
+  const {
+    game,
+    loading,
+    error,
+    handleMove,
+    verifyingPlayerTimeout,
+    verifyPlayerTimeout,
+  } = useGame(gameId);
   const {
     moves,
     loadingMoves,
@@ -52,6 +59,7 @@ export default function Game() {
       (myColor === "WHITE" ? game.blackConnected : game.whiteConnected) ?? true,
     gameStatus: game.status,
     timeLeft: myColor === "WHITE" ? game.blackTimeLeft : game.whiteTimeLeft,
+    verifyingPlayerTimeout,
   };
 
   const myProps = {
@@ -64,6 +72,7 @@ export default function Game() {
       (myColor === "WHITE" ? game.whiteConnected : game.blackConnected) ?? true,
     gameStatus: game.status,
     timeLeft: myColor === "WHITE" ? game.whiteTimeLeft : game.blackTimeLeft,
+    verifyingPlayerTimeout,
   };
 
   const timedOutBy = game.result === "BLACK" ? "WHITE" : "BLACK";
@@ -72,7 +81,10 @@ export default function Game() {
       <div className="grid grid-cols-1 md:grid-cols-3 md:gap-6 w-full max-w-4xl md:h-[95vh] min-h-0 rounded-lg px-4 py-1 md:border md:border-border">
         {/* ── Board column ── */}
         <div className="flex flex-col h-full min-h-0 overflow-hidden md:col-span-2">
-          <PlayerPanel {...opponentProps} />
+          <PlayerPanel
+            {...opponentProps}
+            verifyPlayerTimeout={verifyPlayerTimeout}
+          />
 
           <div className="flex-1 min-h-0 flex justify-center md:justify-start items-center w-full">
             <div className="board-inner">
@@ -96,7 +108,7 @@ export default function Game() {
             </div>
           </div>
 
-          <PlayerPanel {...myProps} />
+          <PlayerPanel {...myProps} verifyPlayerTimeout={verifyPlayerTimeout} />
         </div>
         <div className="h-76 md:h-full min-h-0 overflow-hidden md:p-4">
           <SidePanel
