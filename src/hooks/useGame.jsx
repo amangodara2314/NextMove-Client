@@ -137,6 +137,13 @@ export default function useGame(gameId) {
     whiteTimeLeft,
     blackTimeLeft,
   }) => {
+    console.log("Applying move update:", {
+      fen,
+      version,
+      move,
+      whiteTimeLeft,
+      blackTimeLeft,
+    });
     setGame((prev) => {
       if (!prev) return prev;
       return {
@@ -145,8 +152,8 @@ export default function useGame(gameId) {
         version,
         turn: fen.split(" ")[1] === "w" ? "WHITE" : "BLACK",
         lastMove: move,
-        whiteTimeLeft,
-        blackTimeLeft,
+        whiteTimeLeft: Number(whiteTimeLeft),
+        blackTimeLeft: Number(blackTimeLeft),
       };
     });
   };
@@ -173,13 +180,15 @@ export default function useGame(gameId) {
             status: response.gameStatus ?? prev.status,
           }));
         }
-        applyMoveUpdate({
-          fen: response.fen,
-          version: response.version,
-          move: response.move,
-          whiteTimeLeft: response.whiteTimeLeft,
-          blackTimeLeft: response.blackTimeLeft,
-        });
+        if (game.version !== response.version) {
+          applyMoveUpdate({
+            fen: response.fen,
+            version: response.version,
+            move: response.move,
+            whiteTimeLeft: response.whiteTimeLeft,
+            blackTimeLeft: response.blackTimeLeft,
+          });
+        }
         resolve(response);
       });
     });
