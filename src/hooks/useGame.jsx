@@ -137,13 +137,6 @@ export default function useGame(gameId) {
     whiteTimeLeft,
     blackTimeLeft,
   }) => {
-    console.log("Applying move update:", {
-      fen,
-      version,
-      move,
-      whiteTimeLeft,
-      blackTimeLeft,
-    });
     setGame((prev) => {
       if (!prev) return prev;
       return {
@@ -178,6 +171,7 @@ export default function useGame(gameId) {
           setGame((prev) => ({
             ...prev,
             status: response.gameStatus ?? prev.status,
+            result: response.gameResult ?? prev.result,
           }));
         }
         if (game.version !== response.version) {

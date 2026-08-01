@@ -16,12 +16,12 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "../lib/utils";
 import { useSelector } from "react-redux";
 import { selectUser } from "../features/auth/authSelectors";
+import { Link } from "react-router-dom";
 
 function ChessEmblem({ className }) {
   return (
     <div className={cn("relative", className)}>
       <ChessKing className="absolute inset-0 h-1/2 w-1/2" />
-      {/* <ChessQueen className="absolute inset-0 h-1/2 w-1/2" /> */}
     </div>
   );
 }
@@ -68,7 +68,7 @@ export default function Home() {
       <div className="mx-auto max-w-5xl px-6 py-14 sm:px-10 sm:py-20">
         {/* Hero */}
         <div className="relative overflow-hidden">
-          <ChessEmblem className="pointer-events-none absolute -right-32 top-0 h-[16rem] w-[16rem] text-foreground sm:h-[22rem] sm:w-[22rem]" />
+          <ChessEmblem className="pointer-events-none absolute -right-32 top-0 h-[16rem] w-[16rem] text-foreground sm:h-[22rem] sm:w-[22rem] hidden lg:block" />
 
           <div className="relative space-y-6">
             <h1
@@ -105,10 +105,10 @@ export default function Home() {
             </div>
 
             <Button asChild size="lg" className="gap-1.5">
-              <a href="/play">
+              <Link to="/play">
                 Play now
                 <ChevronRight className="h-4 w-4" />
-              </a>
+              </Link>
             </Button>
           </div>
         </div>

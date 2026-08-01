@@ -4,7 +4,6 @@ import { ThemeProvider } from "./components/ThemeProvider";
 import { useEffect } from "react";
 import socket, { connectSocket, disconnectSocket } from "./configs/socket";
 import { Toaster } from "@/components/ui/sonner";
-import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 
 export default function App() {

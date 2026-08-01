@@ -14,7 +14,7 @@ const authSlice = createSlice({
     setUser: (state, { payload }) => {
       state.user = payload.user || null;
       state.isAuthenticated = true;
-      state.accessToken = payload?.accessToken || null;
+      state.accessToken = payload?.accessToken ?? state.accessToken;
     },
   },
 });

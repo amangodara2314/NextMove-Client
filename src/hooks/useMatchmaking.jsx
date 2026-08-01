@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import socket from "../configs/socket";
 import { useNavigate } from "react-router-dom";
 import { newGame } from "../services/matchmaking/matchmakingServices";
@@ -10,8 +10,11 @@ export default function useMatchmaking() {
   const [isSearching, setIsSearching] = useState(false);
   const [selectedControl, setSelectedControl] = useState(null);
   const navigate = useNavigate();
+  const matchFoundRef = useRef(false);
 
   useEffect(() => {
+    matchFoundRef.current = false;
+
     const handleMatchFound = (data) => {
       socket.emit("MATCH_ACK", { reservationId: data.reservationId });
     };
@@ -23,6 +26,7 @@ export default function useMatchmaking() {
     };
 
     const handleMatchReady = (data) => {
+      matchFoundRef.current = true;
       navigate(`/game/${data.gameId}`, { replace: true });
     };
 
@@ -34,7 +38,10 @@ export default function useMatchmaking() {
       socket.off("MATCH_FOUND", handleMatchFound);
       socket.off("NO_MATCH_FOUND", handleNoMatchFound);
       socket.off("MATCH_READY", handleMatchReady);
-      socket.emit("CANCEL_MATCHMAKING");
+      // Only cancel matchmaking if we're unmounting without having found a game
+      if (!matchFoundRef.current) {
+        socket.emit("CANCEL_MATCHMAKING");
+      }
     };
   }, []);
 
