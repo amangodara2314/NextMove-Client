@@ -13,6 +13,8 @@ const endpoints = {
     GET_MOVES: (gameId, cursor) =>
       `/game/moves/${gameId}${cursor ? "?cursor=" + cursor : ""}`,
     CHECK_PLAYER_TIMEOUT: (gameId) => `/game/check-timeout/${gameId}`,
+    OFFER_DRAW: (gameId) => `/game/offer-draw/${gameId}`,
+    ACCEPT_DRAW: (gameId) => `/game/accept-draw/${gameId}`,
   },
 };
 

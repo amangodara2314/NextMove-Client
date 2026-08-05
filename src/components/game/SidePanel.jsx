@@ -1,7 +1,6 @@
-import { Flag, Handshake } from "lucide-react";
-import { Button } from "../ui/button";
 import MoveList from "./MoveList";
 import StatusBadge from "./StatusBadge";
+import DrawResignButtons from "./DrawResignButtons";
 
 export default function SidePanel({
   game,
@@ -12,6 +11,7 @@ export default function SidePanel({
   fetchMore,
   selectedMove,
   setSelectedMove,
+  handleOfferDraw,
 }) {
   const started = new Date(game.createdAt);
   const startedStr =
@@ -46,14 +46,7 @@ export default function SidePanel({
 
       {/* Draw and Resign buttons */}
       {game.status === "ACTIVE" && (
-        <div className="flex flex-col gap-3 px-3 py-3">
-          <Button>
-            Resign <Flag />
-          </Button>
-          <Button>
-            Offer Draw <Handshake />
-          </Button>
-        </div>
+        <DrawResignButtons handleOfferDraw={handleOfferDraw} />
       )}
     </div>
   );

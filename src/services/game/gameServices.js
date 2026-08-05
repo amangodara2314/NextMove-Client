@@ -13,4 +13,12 @@ const checkPlayerTimeout = (gameId) => {
   return api.get(endpoints.game.CHECK_PLAYER_TIMEOUT(gameId));
 };
 
-export { getGame, getMoves, checkPlayerTimeout };
+const offerDraw = (gameId) => {
+  return api.post(endpoints.game.OFFER_DRAW(gameId));
+};
+
+const acceptDraw = (gameId) => {
+  return api.post(endpoints.game.ACCEPT_DRAW(gameId));
+};
+
+export { getGame, getMoves, checkPlayerTimeout, offerDraw, acceptDraw };

@@ -22,10 +22,19 @@ const STATUS_MAP = {
     badgeClassName: "border-border bg-muted text-muted-foreground",
     iconClassName: "text-muted-foreground",
   },
+  DRAW: {
+    label: "Draw",
+    icon: Flag,
+    badgeClassName: "border-border bg-muted text-muted-foreground",
+    iconClassName: "text-muted-foreground",
+  },
 };
 
 export default function StatusBadge({ status, className }) {
-  const key = status === "ACTIVE" || status === "ABORTED" ? status : "FINISHED";
+  const key =
+    status === "ACTIVE" || status === "ABORTED" || status === "DRAW"
+      ? status
+      : "FINISHED";
   const { label, icon: Icon, badgeClassName, iconClassName } = STATUS_MAP[key];
 
   return (

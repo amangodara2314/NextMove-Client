@@ -16,6 +16,8 @@ export default function Game() {
     handleMove,
     verifyingPlayerTimeout,
     verifyPlayerTimeout,
+    handleOfferDraw,
+    handleAcceptDraw,
   } = useGame(gameId);
   const {
     moves,
@@ -76,6 +78,9 @@ export default function Game() {
   };
 
   const timedOutBy = game.result === "BLACK" ? "WHITE" : "BLACK";
+
+  const canMove =
+    selectedMove && !selectedMove?.isLast ? false : game.turn === myColor;
   return (
     <div className="md:h-screen flex items-center justify-center bg-background overflow-hidden">
       <div className="grid grid-cols-1 md:grid-cols-3 md:gap-6 w-full max-w-4xl md:h-[95vh] min-h-0 rounded-lg px-4 py-1 md:border md:border-border">
@@ -91,11 +96,7 @@ export default function Game() {
               <Board
                 boardOrientation={myColor === "WHITE" ? "white" : "black"}
                 position={selectedMove?.fenAfter || game.fen}
-                canMove={
-                  selectedMove && !selectedMove?.isLast
-                    ? false
-                    : game.turn === myColor
-                }
+                canMove={canMove}
                 selectedMove={selectedMove}
                 version={game.version}
                 gameId={game.id}
@@ -120,6 +121,7 @@ export default function Game() {
             fetchMore={fetchMore}
             selectedMove={selectedMove}
             setSelectedMove={setSelectedMove}
+            handleOfferDraw={handleOfferDraw}
           />
         </div>
       </div>
