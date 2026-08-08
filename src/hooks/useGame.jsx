@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { useSelector } from "react-redux";
 import { selectUser } from "../features/auth/authSelectors";
 import { showDrawOfferToast } from "../components/game/DrawOfferToast";
+import { emitWithAuth } from "../utils/emitWithAuth";
 
 export default function useGame(gameId) {
   const [game, setGame] = useState(null);
@@ -66,7 +67,6 @@ export default function useGame(gameId) {
             ...data.game,
           };
         });
-        toast.success("Draw accepted.");
       }
     } catch (err) {
       console.log("Error accepting draw:", err);
@@ -80,7 +80,7 @@ export default function useGame(gameId) {
     const controller = new AbortController();
 
     const joinGame = (shouldSync = true) => {
-      socket.emit("JOIN_GAME", { gameId });
+      emitWithAuth("JOIN_GAME", { gameId });
       if (shouldSync) {
         syncGame().catch((err) => {
           setError(getErrorMessage(err));
@@ -211,7 +211,7 @@ export default function useGame(gameId) {
 
   const handleMove = (data) => {
     return new Promise((resolve, reject) => {
-      socket.emit("MAKE_MOVE", data, (response) => {
+      emitWithAuth("MAKE_MOVE", data, (response) => {
         if (!response?.success) {
           if (response?.message === "STALE_STATE") {
             toast.error("Board was out of sync — refreshing...");

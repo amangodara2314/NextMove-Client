@@ -3,6 +3,7 @@ import socket from "../configs/socket";
 import { useNavigate } from "react-router-dom";
 import { newGame } from "../services/matchmaking/matchmakingServices";
 import { getErrorMessage, getResponseData } from "../utils/responseHelpers";
+import { emitWithAuth } from "../utils/emitWithAuth";
 
 export default function useMatchmaking() {
   const [error, setError] = useState(null);
@@ -16,7 +17,7 @@ export default function useMatchmaking() {
     matchFoundRef.current = false;
 
     const handleMatchFound = (data) => {
-      socket.emit("MATCH_ACK", { reservationId: data.reservationId });
+      emitWithAuth("MATCH_ACK", { reservationId: data.reservationId });
     };
 
     const handleNoMatchFound = () => {
@@ -40,7 +41,7 @@ export default function useMatchmaking() {
       socket.off("MATCH_READY", handleMatchReady);
       // Only cancel matchmaking if we're unmounting without having found a game
       if (!matchFoundRef.current) {
-        socket.emit("CANCEL_MATCHMAKING");
+        emitWithAuth("CANCEL_MATCHMAKING");
       }
     };
   }, []);
@@ -66,7 +67,7 @@ export default function useMatchmaking() {
   };
 
   const cancelSearch = () => {
-    socket.emit("CANCEL_MATCHMAKING");
+    emitWithAuth("CANCEL_MATCHMAKING");
     setIsSearching(false);
     setSelectedControl(null);
   };
