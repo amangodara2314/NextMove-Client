@@ -109,7 +109,7 @@ export function LoginForm({ className, submitHandler, ...props }) {
                 </Button>
               </Field>
               <FieldDescription className="text-center">
-                Don&apos;t have an account? <Link to="/signup">Sign up</Link>
+                Don&apos;t have an account? <Link to="/register">Sign up</Link>
               </FieldDescription>
             </FieldGroup>
           </form>

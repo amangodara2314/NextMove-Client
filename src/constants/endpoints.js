@@ -3,6 +3,9 @@ const endpoints = {
     LOGIN: "/auth/login",
     GET_ME: "/auth/me",
     REFRESH_TOKEN: "/auth/refresh-token",
+    REGISTER: "/auth/register",
+    RESEND_OTP: "/auth/resend-otp",
+    VERIFY_OTP: "/auth/verify-otp",
   },
   matchmaking: {
     NEW_GAME: "/matchmaking/new-game",

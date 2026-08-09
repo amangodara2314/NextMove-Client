@@ -5,12 +5,18 @@ import MainLayout from "../layouts/MainLayout";
 import Home from "../pages/Home";
 import Matchmaking from "../pages/Matchmaking";
 import Game from "../pages/Game";
+import Register from "../pages/auth/Register";
 
 export default function Router() {
   const router = createBrowserRouter([
     {
       path: "/login",
       element: <Login />,
+    },
+
+    {
+      path: "/register",
+      element: <Register />,
     },
 
     {

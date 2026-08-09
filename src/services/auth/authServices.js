@@ -9,4 +9,16 @@ const getMe = () => {
   return api.get(endpoints.auth.GET_ME);
 };
 
-export { login, getMe };
+const register = (data) => {
+  return api.post(endpoints.auth.REGISTER, data);
+};
+
+const verifyOtp = (data) => {
+  return api.post(endpoints.auth.VERIFY_OTP, data);
+};
+
+const resendOtp = (data) => {
+  return api.post(endpoints.auth.RESEND_OTP, data);
+};
+
+export { login, getMe, register, verifyOtp, resendOtp };
