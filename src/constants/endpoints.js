@@ -6,6 +6,8 @@ const endpoints = {
     REGISTER: "/auth/register",
     RESEND_OTP: "/auth/resend-otp",
     VERIFY_OTP: "/auth/verify-otp",
+    GOOGLE_LOGIN: "/auth/google/login",
+    GOOGLE_REGISTER: "/auth/google/register",
   },
   matchmaking: {
     NEW_GAME: "/matchmaking/new-game",

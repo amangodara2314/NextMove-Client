@@ -12,7 +12,8 @@ const STEPS = [
 
 export function RegisterForm({
   className,
-  onGoogleSignup,
+  onGoogleSignupSuccess,
+  onGoogleSignupError,
   onSendOtp,
   onVerifyOtp,
   onResendOtp,
@@ -38,7 +39,8 @@ export function RegisterForm({
 
             {step === "details" && (
               <DetailsStep
-                onGoogleSignup={onGoogleSignup}
+                onGoogleSignupSuccess={onGoogleSignupSuccess}
+                onGoogleSignupError={onGoogleSignupError}
                 onSendOtp={onSendOtp}
                 onSuccess={goToOtpStep}
               />

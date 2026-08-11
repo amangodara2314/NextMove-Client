@@ -17,7 +17,6 @@ export default function Login() {
       dispatch(setUser(resData));
       Cookies.set("accessToken", resData.accessToken, { expires: 7 });
       navigate("/", { replace: true });
-      return;
     } catch (error) {
       const message = getErrorMessage(error);
       setError("root", {

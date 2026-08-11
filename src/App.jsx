@@ -1,4 +1,5 @@
 import { RouterProvider } from "react-router-dom";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import Router from "./router/Router";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { useEffect } from "react";
@@ -32,9 +33,13 @@ export default function App() {
   }, [accessToken]);
 
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="nextmove-ui-theme">
-      <Router />
-      <Toaster richColors />
-    </ThemeProvider>
+    <>
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+        <ThemeProvider defaultTheme="dark" storageKey="nextmove-ui-theme">
+          <Router />
+          <Toaster richColors />
+        </ThemeProvider>
+      </GoogleOAuthProvider>
+    </>
   );
 }
