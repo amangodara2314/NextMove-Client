@@ -21,20 +21,8 @@ const resendOtp = (data) => {
   return api.post(endpoints.auth.RESEND_OTP, data);
 };
 
-const googleLogin = (data) => {
-  return api.post(endpoints.auth.GOOGLE_LOGIN, data);
+const googleAuth = (data) => {
+  return api.post(endpoints.auth.GOOGLE_AUTH, data);
 };
 
-const googleRegister = (data) => {
-  return api.post(endpoints.auth.GOOGLE_REGISTER, data);
-};
-
-export {
-  login,
-  getMe,
-  register,
-  verifyOtp,
-  resendOtp,
-  googleLogin,
-  googleRegister,
-};
+export { login, getMe, register, verifyOtp, resendOtp, googleAuth };

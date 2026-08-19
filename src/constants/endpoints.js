@@ -6,8 +6,7 @@ const endpoints = {
     REGISTER: "/auth/register",
     RESEND_OTP: "/auth/resend-otp",
     VERIFY_OTP: "/auth/verify-otp",
-    GOOGLE_LOGIN: "/auth/google/login",
-    GOOGLE_REGISTER: "/auth/google/register",
+    GOOGLE_AUTH: "/auth/google",
   },
   matchmaking: {
     NEW_GAME: "/matchmaking/new-game",
@@ -20,6 +19,9 @@ const endpoints = {
     CHECK_PLAYER_TIMEOUT: (gameId) => `/game/check-timeout/${gameId}`,
     OFFER_DRAW: (gameId) => `/game/offer-draw/${gameId}`,
     ACCEPT_DRAW: (gameId) => `/game/accept-draw/${gameId}`,
+  },
+  RATING: {
+    GET_USER_RATINGS: `/rating/all`,
   },
 };
 

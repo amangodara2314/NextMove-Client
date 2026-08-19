@@ -2,9 +2,9 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import Board from "../components/game/Board";
 import PlayerPanel from "../components/game/PlayerPanel";
-import useGame from "../hooks/useGame";
+import useGame from "../hooks/useGame.js";
 import Loader from "../components/Loader";
-import useMoves from "../hooks/useMoves";
+import useMoves from "../hooks/useMoves.js";
 import SidePanel from "../components/game/SidePanel";
 
 export default function Game() {

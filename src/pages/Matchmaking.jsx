@@ -14,7 +14,7 @@ import Loader from "../components/Loader";
 import { cn } from "../lib/utils";
 import { useNavigate } from "react-router-dom";
 import useTimeControlSettings from "../hooks/useTimeControlSettings";
-import useMatchmaking from "../hooks/useMatchmaking";
+import useMatchmaking from "../hooks/useMatchmaking.js";
 
 const CATEGORY_META = {
   BULLET: { icon: Zap, label: "Bullet" },

@@ -20,7 +20,7 @@ export default function GoogleAuthButton({ handleOnSuccess, handleOnError }) {
           fill="currentColor"
         />
       </svg>
-      Sign up with Google
+      Google
     </Button>
   );
 }

@@ -36,7 +36,10 @@ api.interceptors.response.use(
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
-      originalRequest.url !== endpoints.auth.REFRESH_TOKEN
+      originalRequest.url !== endpoints.auth.REFRESH_TOKEN &&
+      originalRequest.url !== endpoints.auth.LOGIN &&
+      originalRequest.url !== endpoints.auth.GOOGLE_LOGIN &&
+      originalRequest.url !== endpoints.auth.GOOGLE_REGISTER
     ) {
       originalRequest._retry = true;
 
