@@ -17,6 +17,7 @@ import { cn } from "../lib/utils";
 import { useSelector } from "react-redux";
 import { selectUser } from "../features/auth/authSelectors";
 import { Link } from "react-router-dom";
+import useRatings from "../hooks/useRating";
 
 function ChessEmblem({ className }) {
   return (
@@ -44,6 +45,7 @@ const QUICK_ACTIONS = [
 ];
 
 export default function Home() {
+  const { ratings, loadingRatings, ratingsError, fetchRatings } = useRatings();
   const user = useSelector(selectUser);
   const isPositive = (user?.ratingDelta ?? 0) >= 0;
   const DeltaIcon = isPositive ? TrendingUp : TrendingDown;

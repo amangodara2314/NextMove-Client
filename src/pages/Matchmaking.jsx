@@ -13,7 +13,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Loader from "../components/Loader";
 import { cn } from "../lib/utils";
 import { useNavigate } from "react-router-dom";
-import useTimeControlSettings from "../hooks/useTimeControlSettings";
+import useTimeControlSettings from "../hooks/useTimeControlSettings.js";
 import useMatchmaking from "../hooks/useMatchmaking.js";
 
 const CATEGORY_META = {
