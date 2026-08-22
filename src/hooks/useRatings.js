@@ -12,7 +12,7 @@ export default function useRatings() {
       setLoadingRatings(true);
       const response = await getUserRatings();
       const data = getResponseData(response);
-      setRatings(data.ratings);
+      setRatings(data);
     } catch (error) {
       setRatingsError(getErrorMessage(error));
     } finally {

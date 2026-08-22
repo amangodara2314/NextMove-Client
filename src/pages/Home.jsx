@@ -17,7 +17,7 @@ import { cn } from "../lib/utils";
 import { useSelector } from "react-redux";
 import { selectUser } from "../features/auth/authSelectors";
 import { Link } from "react-router-dom";
-import useRatings from "../hooks/useRating";
+import useRatings from "../hooks/useRatings";
 
 function ChessEmblem({ className }) {
   return (
@@ -49,19 +49,6 @@ export default function Home() {
   const user = useSelector(selectUser);
   const isPositive = (user?.ratingDelta ?? 0) >= 0;
   const DeltaIcon = isPositive ? TrendingUp : TrendingDown;
-
-  const stats = [
-    { label: "Rating", value: user?.rating ?? "—" },
-    { label: "Games played", value: user?.gamesPlayed ?? "—" },
-    {
-      label: "Win rate",
-      value: user?.winRate != null ? `${user.winRate}%` : "—",
-    },
-    {
-      label: "Current streak",
-      value: user?.streak != null ? `${user.streak} wins` : "—",
-    },
-  ];
 
   return (
     <div className="h-full bg-background">
@@ -123,15 +110,17 @@ export default function Home() {
             Your standing
           </h2>
           <div className="grid grid-cols-2 divide-x divide-y divide-border rounded-xl border border-border bg-card sm:grid-cols-4 sm:divide-y-0">
-            {stats.map((s) => (
-              <div key={s.label} className="px-5 py-6">
+            {ratings.map((rating) => (
+              <div key={rating.type} className="px-5 py-6">
                 <p
                   className="text-3xl text-card-foreground"
                   style={{ fontFamily: "'Newsreader', serif" }}
                 >
-                  {s.value}
+                  {rating.rating}
                 </p>
-                <p className="mt-1 text-sm text-muted-foreground">{s.label}</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {rating.type}
+                </p>
               </div>
             ))}
           </div>
