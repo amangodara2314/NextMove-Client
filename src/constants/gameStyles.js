@@ -35,6 +35,7 @@ const OUTCOME_STYLES = {
     iconColor: "text-yellow-300",
     titleColor: "text-yellow-200",
     subtitleColor: "text-yellow-400/70",
+    ratingChangeColor: "text-emerald-400",
   },
   lose: {
     backdrop: "bg-black/65",
@@ -43,6 +44,7 @@ const OUTCOME_STYLES = {
     iconColor: "text-red-400",
     titleColor: "text-red-200",
     subtitleColor: "text-red-400/60",
+    ratingChangeColor: "text-destructive",
   },
   draw: {
     backdrop: "bg-black/55",
@@ -51,6 +53,7 @@ const OUTCOME_STYLES = {
     iconColor: "text-slate-300",
     titleColor: "text-slate-100",
     subtitleColor: "text-slate-400/70",
+    ratingChangeColor: "text-slate-400",
   },
 };
 

@@ -77,6 +77,21 @@ export default function Game() {
     verifyingPlayerTimeout,
   };
 
+  const ratingData = {
+    myRatingBefore:
+      myColor === "WHITE" ? game.whiteRatingBefore : game.blackRatingBefore,
+    myRatingAfter:
+      myColor === "WHITE" ? game.whiteRatingAfter : game.blackRatingAfter,
+    myRatingChange:
+      myColor === "WHITE" ? game.whiteRatingChange : game.blackRatingChange,
+    opponentRatingBefore:
+      myColor === "WHITE" ? game.blackRatingBefore : game.whiteRatingBefore,
+    opponentRatingAfter:
+      myColor === "WHITE" ? game.blackRatingAfter : game.whiteRatingAfter,
+    opponentRatingChange:
+      myColor === "WHITE" ? game.blackRatingChange : game.whiteRatingChange,
+  };
+
   const timedOutBy = game.result === "BLACK" ? "WHITE" : "BLACK";
 
   const canMove =
@@ -105,6 +120,7 @@ export default function Game() {
                 abortedBy={game.abortedBy}
                 myColor={myColor}
                 timedOutBy={timedOutBy}
+                ratingData={ratingData}
               />
             </div>
           </div>

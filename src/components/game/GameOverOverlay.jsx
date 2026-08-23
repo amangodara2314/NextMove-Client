@@ -62,6 +62,16 @@ export default function GameOverOverlay({ result }) {
                 {result.subtitle}
               </p>
             )}
+
+            {/* Rating Change */}
+            {result.ratingChange !== undefined && (
+              <p
+                className={`gameover-rating-change text-sm ${s.ratingChangeColor}`}
+              >
+                Rating Change: {result.ratingChange >= 0 ? "+" : ""}
+                {result.ratingChange}
+              </p>
+            )}
           </div>
         </div>
       </div>

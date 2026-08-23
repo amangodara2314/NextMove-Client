@@ -48,6 +48,16 @@ export default function EndOverlay({ type, abortedBy, timedOutBy, myColor }) {
           <p className="text-sm text-muted-foreground leading-snug">
             {config.description}
           </p>
+          <p className="text-xs text-muted-foreground">
+            {ratingData && (
+              <span>
+                Your rating: {ratingData.myRatingBefore} →{" "}
+                {ratingData.myRatingAfter} (
+                {ratingData.myRatingChange >= 0 ? "+" : "-"}
+                {ratingData.myRatingChange})
+              </span>
+            )}
+          </p>
         </div>
       </div>
     </div>

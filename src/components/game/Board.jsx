@@ -20,6 +20,7 @@ export default function Board({
   abortedBy,
   myColor,
   timedOutBy,
+  ratingData = {},
 }) {
   const [game, setGame] = useState(() => new Chess());
   const [moveFrom, setMoveFrom] = useState("");
@@ -251,7 +252,7 @@ export default function Board({
     : null;
 
   let showGameOverOverlay = false;
-  if (!isGameEnded) {
+  if (!isGameEnded && gameStatus !== "ACTIVE") {
     if (!selectedMove) {
       showGameOverOverlay = !!gameResult;
     } else {
@@ -261,6 +262,13 @@ export default function Board({
   }
 
   const showEndOverlay = isGameEnded && !selectedMove;
+
+  console.log(
+    "should show game over overlay",
+    showGameOverOverlay,
+    "or",
+    showEndOverlay,
+  );
 
   return (
     <div ref={boardRef} className="relative inline-block">
@@ -281,10 +289,13 @@ export default function Board({
           abortedBy={abortedBy}
           timedOutBy={timedOutBy}
           myColor={myColor}
+          ratingData={ratingData}
         />
       )}
 
-      {showGameOverOverlay && <GameOverOverlay result={gameResult} />}
+      {showGameOverOverlay && (
+        <GameOverOverlay result={gameResult} ratingData={ratingData} />
+      )}
 
       <Chessboard
         options={{

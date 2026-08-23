@@ -24,6 +24,7 @@ function Clock({
   verifyPlayerTimeout,
   verifyingPlayerTimeout,
   isYou = false,
+  isGameActive = true,
 }) {
   const [displayTime, setDisplayTime] = useState(timeLeft);
   const lastTickRef = useRef(Date.now());
@@ -51,7 +52,7 @@ function Clock({
   }, [isRunning]);
 
   useEffect(() => {
-    if (isYou || displayTime > 0) return;
+    if (isYou || displayTime > 0 || !isGameActive) return;
 
     verifyPlayerTimeout?.();
     if (intervalRef.current) {

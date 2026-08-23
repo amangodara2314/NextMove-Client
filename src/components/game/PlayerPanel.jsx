@@ -90,6 +90,7 @@ function PlayerPanel({
         verifyPlayerTimeout={verifyPlayerTimeout}
         verifyingPlayerTimeout={verifyingPlayerTimeout}
         isYou={isYou}
+        isGameActive={gameStatus === "ACTIVE"}
       />
     </div>
   );
