@@ -3,7 +3,7 @@ import { OUTCOME_STYLES } from "../../constants/gameStyles";
 import Particles from "./Particles";
 import playGameOverSound from "../../utils/gameSounds";
 
-export default function GameOverOverlay({ result }) {
+export default function GameOverOverlay({ result, ratingData }) {
   const hasPlayedRef = useRef(false);
 
   useEffect(() => {
@@ -64,12 +64,18 @@ export default function GameOverOverlay({ result }) {
             )}
 
             {/* Rating Change */}
-            {result.ratingChange !== undefined && (
+            {ratingData && (
               <p
                 className={`gameover-rating-change text-sm ${s.ratingChangeColor}`}
               >
-                Rating Change: {result.ratingChange >= 0 ? "+" : ""}
-                {result.ratingChange}
+                {ratingData && (
+                  <span>
+                    Your rating: {ratingData.myRatingBefore} →{" "}
+                    {ratingData.myRatingAfter} (
+                    {ratingData.myRatingChange >= 0 ? "+" : ""}
+                    {ratingData.myRatingChange})
+                  </span>
+                )}
               </p>
             )}
           </div>

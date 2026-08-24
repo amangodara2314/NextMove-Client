@@ -251,6 +251,14 @@ export default function Board({
     ? (game.get(pendingPromotion.to)?.color ?? boardOrientation[0])
     : null;
 
+  console.log(
+    "game status",
+    gameStatus,
+    "isGameEnded",
+    isGameEnded,
+    "selectedMove",
+    selectedMove,
+  );
   let showGameOverOverlay = false;
   if (!isGameEnded && gameStatus !== "ACTIVE") {
     if (!selectedMove) {

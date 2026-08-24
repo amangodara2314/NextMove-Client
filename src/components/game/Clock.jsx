@@ -58,6 +58,7 @@ function Clock({
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
+    ``;
   }, [displayTime, isYou]);
 
   const isLow = displayTime <= LOW_TIME_MS;

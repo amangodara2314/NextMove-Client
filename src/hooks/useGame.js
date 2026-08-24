@@ -194,6 +194,9 @@ export default function useGame(gameId) {
     move,
     whiteTimeLeft,
     blackTimeLeft,
+    gameStatus = null,
+    gameResult = null,
+    ...rest
   }) => {
     setGame((prev) => {
       if (!prev) return prev;
@@ -205,6 +208,9 @@ export default function useGame(gameId) {
         lastMove: move,
         whiteTimeLeft: Number(whiteTimeLeft),
         blackTimeLeft: Number(blackTimeLeft),
+        status: gameStatus || prev.status,
+        result: gameResult,
+        ...rest,
       };
     });
   };
