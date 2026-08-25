@@ -13,6 +13,9 @@ function PlayerPanel({
   timeLeft = 0, // in ms
   verifyingPlayerTimeout,
   verifyPlayerTimeout,
+  ratingBefore,
+  ratingAfter,
+  ratingChange,
 }) {
   const isRunning = active && gameStatus === "ACTIVE";
 
@@ -74,7 +77,9 @@ function PlayerPanel({
 
         {isConnected ? (
           <span className="text-sm text-muted-foreground leading-none">
-            #{player.rating}
+            #{ratingBefore}{" "}
+            {gameStatus !== "ACTIVE" &&
+              `(${ratingChange >= 0 ? "+" : ""}${ratingChange})`}
           </span>
         ) : (
           <span className="inline-flex items-center gap-1 text-sm font-medium text-destructive leading-none animate-pulse">

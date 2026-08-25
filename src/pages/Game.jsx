@@ -51,32 +51,6 @@ export default function Game() {
 
   const myColor = game.userColor;
 
-  const opponentProps = {
-    player: myColor === "WHITE" ? game.blackPlayer : game.whitePlayer,
-    color: myColor === "WHITE" ? "BLACK" : "WHITE",
-    active: game.turn !== myColor,
-    isYou: false,
-    borderSide: "top",
-    isConnected:
-      (myColor === "WHITE" ? game.blackConnected : game.whiteConnected) ?? true,
-    gameStatus: game.status,
-    timeLeft: myColor === "WHITE" ? game.blackTimeLeft : game.whiteTimeLeft,
-    verifyingPlayerTimeout,
-  };
-
-  const myProps = {
-    player: myColor === "WHITE" ? game.whitePlayer : game.blackPlayer,
-    color: myColor,
-    active: game.turn === myColor,
-    isYou: true,
-    borderSide: "bottom",
-    isConnected:
-      (myColor === "WHITE" ? game.whiteConnected : game.blackConnected) ?? true,
-    gameStatus: game.status,
-    timeLeft: myColor === "WHITE" ? game.whiteTimeLeft : game.blackTimeLeft,
-    verifyingPlayerTimeout,
-  };
-
   const ratingData = {
     myRatingBefore:
       myColor === "WHITE" ? game.whiteRatingBefore : game.blackRatingBefore,
@@ -90,6 +64,38 @@ export default function Game() {
       myColor === "WHITE" ? game.blackRatingAfter : game.whiteRatingAfter,
     opponentRatingChange:
       myColor === "WHITE" ? game.blackRatingChange : game.whiteRatingChange,
+  };
+
+  const opponentProps = {
+    player: myColor === "WHITE" ? game.blackPlayer : game.whitePlayer,
+    color: myColor === "WHITE" ? "BLACK" : "WHITE",
+    active: game.turn !== myColor,
+    isYou: false,
+    borderSide: "top",
+    isConnected:
+      (myColor === "WHITE" ? game.blackConnected : game.whiteConnected) ?? true,
+    gameStatus: game.status,
+    timeLeft: myColor === "WHITE" ? game.blackTimeLeft : game.whiteTimeLeft,
+    verifyingPlayerTimeout,
+    ratingBefore: ratingData.opponentRatingBefore,
+    ratingAfter: ratingData.opponentRatingAfter,
+    ratingChange: ratingData.opponentRatingChange,
+  };
+
+  const myProps = {
+    player: myColor === "WHITE" ? game.whitePlayer : game.blackPlayer,
+    color: myColor,
+    active: game.turn === myColor,
+    isYou: true,
+    borderSide: "bottom",
+    isConnected:
+      (myColor === "WHITE" ? game.whiteConnected : game.blackConnected) ?? true,
+    gameStatus: game.status,
+    timeLeft: myColor === "WHITE" ? game.whiteTimeLeft : game.blackTimeLeft,
+    verifyingPlayerTimeout,
+    ratingBefore: ratingData.myRatingBefore,
+    ratingAfter: ratingData.myRatingAfter,
+    ratingChange: ratingData.myRatingChange,
   };
 
   const timedOutBy = game.result === "BLACK" ? "WHITE" : "BLACK";
