@@ -1,26 +1,33 @@
 import { useEffect, useState } from "react";
 import { getUserRatings } from "../services/rating/ratingServices";
 import { getErrorMessage, getResponseData } from "../utils/responseHelpers";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchRatingsFailure,
+  fetchRatingsStart,
+  fetchRatingsSuccess,
+} from "../features/rating/ratingSlice";
+import { selectRating } from "../features/rating/ratingSelectors";
 
 export default function useRatings() {
-  const [ratings, setRatings] = useState([]);
-  const [loadingRatings, setLoadingRatings] = useState(false);
-  const [ratingsError, setRatingsError] = useState(null);
+  const { ratings, loadingRatings, ratingsError } = useSelector(selectRating);
+  console.log("ratings from store:", ratings, loadingRatings, ratingsError);
+  const dispatch = useDispatch();
 
   const fetchRatings = async () => {
     try {
-      setLoadingRatings(true);
+      dispatch(fetchRatingsStart());
       const response = await getUserRatings();
       const data = getResponseData(response);
-      setRatings(data);
+      dispatch(fetchRatingsSuccess(data));
     } catch (error) {
-      setRatingsError(getErrorMessage(error));
-    } finally {
-      setLoadingRatings(false);
+      dispatch(fetchRatingsFailure(getErrorMessage(error)));
     }
   };
 
   useEffect(() => {
+    if (ratings && ratings.length !== 0) return;
+
     fetchRatings();
   }, []);
 

@@ -7,13 +7,14 @@ export default function useMoves(gameId, isGameActive = false) {
   const [moves, setMoves] = useState([]);
   const [cursor, setCursor] = useState(null);
   const [loadingMoves, setLoadingMoves] = useState(false);
-  const [hasMore, setHasMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
   const [movesError, setMovesError] = useState(null);
   const [selectedMove, setSelectedMove] = useState(null);
   const fetchingRef = useRef(false);
   const hasConnectedOnceRef = useRef(false);
 
   const fetchMoves = async (resetStates = false) => {
+    console.log("can fetch moves:", fetchingRef.current, hasMore, gameId);
     if (!gameId || !hasMore || fetchingRef.current) return;
 
     console.log("reset states:", resetStates);

@@ -18,6 +18,7 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../features/auth/authSelectors";
 import { Link } from "react-router-dom";
 import useRatings from "../hooks/useRatings";
+import RatingStats from "../components/home/RatingStats";
 
 function ChessEmblem({ className }) {
   return (
@@ -26,23 +27,6 @@ function ChessEmblem({ className }) {
     </div>
   );
 }
-
-const QUICK_ACTIONS = [
-  {
-    label: "Puzzles",
-    desc: "Sharpen your tactics",
-    icon: Puzzle,
-    to: "/puzzles",
-  },
-  { label: "Watch", desc: "Live games right now", icon: Eye, to: "/watch" },
-  { label: "Analyze", desc: "Review a game", icon: LineChart, to: "/analysis" },
-  {
-    label: "Learn",
-    desc: "Lessons & openings",
-    icon: GraduationCap,
-    to: "/learn",
-  },
-];
 
 export default function Home() {
   const { ratings, loadingRatings, ratingsError, fetchRatings } = useRatings();
@@ -105,26 +89,11 @@ export default function Home() {
         <Separator className="my-12" />
 
         {/* Stats */}
-        <section>
-          <h2 className="mb-4 text-xs font-medium uppercase tracking-widest text-muted-foreground">
-            Your standing
-          </h2>
-          <div className="grid grid-cols-2 divide-x divide-y divide-border rounded-xl border border-border bg-card sm:grid-cols-4 sm:divide-y-0">
-            {ratings.map((rating) => (
-              <div key={rating.type} className="px-5 py-6">
-                <p
-                  className="text-3xl text-card-foreground"
-                  style={{ fontFamily: "'Newsreader', serif" }}
-                >
-                  {rating.rating}
-                </p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {rating.type}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
+        <RatingStats
+          ratings={ratings}
+          ratingsError={ratingsError}
+          loadingRatings={loadingRatings}
+        />
       </div>
     </div>
   );
