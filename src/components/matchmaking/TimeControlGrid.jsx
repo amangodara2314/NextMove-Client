@@ -1,6 +1,6 @@
 import TimeControlCard from "./TimeControlCard";
 
-export default function TimeControlGrid({ controls, rating, onSelect }) {
+export default function TimeControlGrid({ controls, onSelect }) {
   if (controls.length === 0) {
     return (
       <p className="py-6 text-center text-sm text-muted-foreground">
@@ -15,7 +15,6 @@ export default function TimeControlGrid({ controls, rating, onSelect }) {
         <TimeControlCard
           key={control.title}
           control={control}
-          rating={rating}
           onSelect={onSelect}
         />
       ))}

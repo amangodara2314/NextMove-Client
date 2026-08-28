@@ -12,10 +12,6 @@ function formatElapsed(totalSeconds) {
   return `${minutes}:${String(seconds).padStart(2, "0")}`;
 }
 
-function getRatingSpread(seconds) {
-  return Math.min(50 + Math.floor(seconds / 5) * 25, 400);
-}
-
 export default function SearchingState({
   type,
   selectedControl,
@@ -67,10 +63,7 @@ export default function SearchingState({
               <span className="font-mono text-base text-foreground">
                 {formatElapsed(elapsed)}
               </span>
-              <span>
-                Matching within ±{getRatingSpread(elapsed)}
-                {Number.isFinite(rating) ? ` of ${rating}` : ""}
-              </span>
+              <span>{Number.isFinite(rating) ? ` of ${rating}` : ""}</span>
             </div>
             <Button
               variant="outline"

@@ -8,6 +8,7 @@ import { setUser } from "../features/auth/authSlice";
 import { Spinner } from "@/components/ui/spinner";
 import { getMe } from "../services/auth/authServices";
 import Loader from "../components/Loader";
+import useRatings from "../hooks/useRatings";
 
 // This layout component does the following things :-
 // 1. Check if the user is authenticated or not

@@ -19,7 +19,7 @@ export default function CategorySwitcher({
         const meta = CATEGORY_META[category] ?? { icon: Zap, label: category };
         const Icon = meta.icon;
         const isActive = activeType === category;
-        const rating = ratings?.[category];
+        const rating = ratings.find((r) => r.type === category)?.rating;
 
         return (
           <button
@@ -39,10 +39,10 @@ export default function CategorySwitcher({
             </span>
             <span
               className={cn(
-                "text-[11px] font-normal",
+                "text-sm font-normal",
                 isActive
                   ? "text-primary-foreground/80"
-                  : "text-muted-foreground/70",
+                  : "text-secondary-foreground/70",
               )}
             >
               {Number.isFinite(rating) ? rating : "—"}

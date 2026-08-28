@@ -1,8 +1,7 @@
 import { cn } from "../../lib/utils";
 import { formatIncrement } from "../../utils/helper";
-import RatingBadge from "./RatingBadge";
 
-export default function TimeControlCard({ control, rating, onSelect }) {
+export default function TimeControlCard({ control, onSelect }) {
   const onlinePlayers = control.onlinePlayers;
 
   return (
@@ -30,8 +29,6 @@ export default function TimeControlCard({ control, rating, onSelect }) {
       <span className="text-xs text-muted-foreground">
         {formatIncrement(control.increment) ?? "no increment"}
       </span>
-
-      <RatingBadge rating={rating} />
     </button>
   );
 }

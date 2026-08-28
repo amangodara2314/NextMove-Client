@@ -11,6 +11,7 @@ import NoMatchFoundState from "../components/matchmaking/NoMatchFoundState.jsx";
 import SettingsErrorState from "../components/matchmaking/SettingsErrorState.jsx";
 import useTimeControlSettings from "../hooks/useTimeControlSettings.js";
 import useMatchmaking from "../hooks/useMatchmaking.js";
+import { selectRating } from "../features/rating/ratingSelectors.js";
 
 export default function Matchmaking() {
   const {
@@ -36,7 +37,7 @@ export default function Matchmaking() {
 
   const navigate = useNavigate();
 
-  const { ratings } = useSelector((state) => state.rating);
+  const { ratings } = useSelector(selectRating);
 
   useEffect(() => {
     if (!type && types?.length) {
@@ -69,6 +70,8 @@ export default function Matchmaking() {
       />
     );
   }
+
+  const searchRating = ratings.find((r) => r.type === type);
 
   if (isSearching) {
     return (
@@ -120,7 +123,6 @@ export default function Matchmaking() {
 
         <TimeControlGrid
           controls={activeSettings}
-          rating={ratings?.[type]}
           onSelect={startMatchmaking}
         />
 
