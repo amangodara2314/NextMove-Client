@@ -1,6 +1,12 @@
 import { Ban, Clock } from "lucide-react";
 
-export default function EndOverlay({ type, abortedBy, timedOutBy, myColor }) {
+export default function EndOverlay({
+  type,
+  abortedBy,
+  timedOutBy,
+  myColor,
+  ratingData,
+}) {
   const isAborted = type === "ABORTED";
   const isTimeout = type === "TIMEOUT";
 

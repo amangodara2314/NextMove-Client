@@ -73,13 +73,17 @@ export default function MoveList({
                   <MoveCell
                     move={pair.white}
                     isLast={whiteIdx === lastMoveIndex}
-                    isSelected={selectedMove === pair.white}
+                    isSelected={
+                      selectedMove.moveNumber === pair.white.moveNumber
+                    }
                     onClick={setSelectedMove}
                   />
                   <MoveCell
                     move={pair.black}
                     isLast={blackIdx === lastMoveIndex}
-                    isSelected={selectedMove === pair.black}
+                    isSelected={
+                      selectedMove.moveNumber === pair.black.moveNumber
+                    }
                     onClick={setSelectedMove}
                   />
                 </div>
