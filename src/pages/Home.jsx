@@ -19,6 +19,8 @@ import { selectUser } from "../features/auth/authSelectors";
 import { Link } from "react-router-dom";
 import useRatings from "../hooks/useRatings";
 import RatingStats from "../components/home/RatingStats";
+import useRecentGames from "../hooks/useRecentGames";
+import RecentGames from "../components/home/RecentGames";
 
 function ChessEmblem({ className }) {
   return (
@@ -30,6 +32,8 @@ function ChessEmblem({ className }) {
 
 export default function Home() {
   const { ratings, loadingRatings, ratingsError, fetchRatings } = useRatings();
+  const { recentGames, loadingRecentGames, errorLoadingRecentGames } =
+    useRecentGames();
   const user = useSelector(selectUser);
   const isPositive = (user?.ratingDelta ?? 0) >= 0;
   const DeltaIcon = isPositive ? TrendingUp : TrendingDown;
@@ -40,10 +44,10 @@ export default function Home() {
 
       <div className="mx-auto max-w-5xl px-6 py-14 sm:px-10 sm:py-20">
         {/* Hero */}
-        <div className="relative overflow-hidden">
+        <div className="relative overflow-hidden grid grid-cols-3">
           <ChessEmblem className="pointer-events-none absolute -right-32 top-0 h-[16rem] w-[16rem] text-foreground sm:h-[22rem] sm:w-[22rem] hidden lg:block" />
 
-          <div className="relative space-y-6">
+          <div className="relative space-y-6 col-span-2">
             <h1
               className="text-5xl leading-[1.1] text-foreground sm:text-6xl"
               style={{ fontFamily: "'Newsreader', serif" }}
@@ -93,6 +97,14 @@ export default function Home() {
           ratings={ratings}
           ratingsError={ratingsError}
           loadingRatings={loadingRatings}
+        />
+
+        {/* Recent Games */}
+        <RecentGames
+          games={recentGames}
+          loading={loadingRecentGames}
+          error={errorLoadingRecentGames}
+          currentUsername={user?.username}
         />
       </div>
     </div>

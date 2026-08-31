@@ -19,6 +19,7 @@ const endpoints = {
     CHECK_PLAYER_TIMEOUT: (gameId) => `/game/check-timeout/${gameId}`,
     OFFER_DRAW: (gameId) => `/game/offer-draw/${gameId}`,
     ACCEPT_DRAW: (gameId) => `/game/accept-draw/${gameId}`,
+    RECENT_GAMES: (take = 10) => `/game/recent?take=${take}`,
   },
   RATING: {
     GET_USER_RATINGS: `/rating/all`,

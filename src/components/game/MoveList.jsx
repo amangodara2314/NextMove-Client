@@ -74,7 +74,7 @@ export default function MoveList({
                     move={pair.white}
                     isLast={whiteIdx === lastMoveIndex}
                     isSelected={
-                      selectedMove.moveNumber === pair.white.moveNumber
+                      selectedMove && selectedMove.id === pair.white?.id
                     }
                     onClick={setSelectedMove}
                   />
@@ -82,7 +82,7 @@ export default function MoveList({
                     move={pair.black}
                     isLast={blackIdx === lastMoveIndex}
                     isSelected={
-                      selectedMove.moveNumber === pair.black.moveNumber
+                      selectedMove && selectedMove.id === pair.black?.id
                     }
                     onClick={setSelectedMove}
                   />

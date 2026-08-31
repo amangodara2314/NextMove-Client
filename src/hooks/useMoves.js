@@ -14,10 +14,7 @@ export default function useMoves(gameId, isGameActive = false) {
   const hasConnectedOnceRef = useRef(false);
 
   const fetchMoves = async (resetStates = false) => {
-    console.log("can fetch moves:", fetchingRef.current, hasMore, gameId);
     if (!gameId || !hasMore || fetchingRef.current) return;
-
-    console.log("reset states:", resetStates);
 
     fetchingRef.current = true;
 
@@ -71,7 +68,6 @@ export default function useMoves(gameId, isGameActive = false) {
     if (!gameId) return;
 
     const onMoveMade = (data) => {
-      console.log("move_made event received:", data);
       if (data.move) {
         setMoves((prev) => [...prev, data.move]);
       }

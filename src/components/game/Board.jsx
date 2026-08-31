@@ -251,14 +251,6 @@ export default function Board({
     ? (game.get(pendingPromotion.to)?.color ?? boardOrientation[0])
     : null;
 
-  console.log(
-    "game status",
-    gameStatus,
-    "isGameEnded",
-    isGameEnded,
-    "selectedMove",
-    selectedMove,
-  );
   let showGameOverOverlay = false;
   if (!isGameEnded && gameStatus !== "ACTIVE") {
     if (!selectedMove) {
@@ -270,13 +262,6 @@ export default function Board({
   }
 
   const showEndOverlay = isGameEnded && !selectedMove;
-
-  console.log(
-    "should show game over overlay",
-    showGameOverOverlay,
-    "or",
-    showEndOverlay,
-  );
 
   return (
     <div ref={boardRef} className="relative inline-block">

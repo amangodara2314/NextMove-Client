@@ -21,4 +21,15 @@ const acceptDraw = (gameId) => {
   return api.post(endpoints.game.ACCEPT_DRAW(gameId));
 };
 
-export { getGame, getMoves, checkPlayerTimeout, offerDraw, acceptDraw };
+const getRecentGames = () => {
+  return api.get(endpoints.game.RECENT_GAMES(10));
+};
+
+export {
+  getGame,
+  getMoves,
+  checkPlayerTimeout,
+  offerDraw,
+  acceptDraw,
+  getRecentGames,
+};

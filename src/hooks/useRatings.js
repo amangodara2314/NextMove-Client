@@ -11,7 +11,6 @@ import { selectRating } from "../features/rating/ratingSelectors";
 
 export default function useRatings() {
   const { ratings, loadingRatings, ratingsError } = useSelector(selectRating);
-  console.log("ratings from store:", ratings, loadingRatings, ratingsError);
   const dispatch = useDispatch();
 
   const fetchRatings = async () => {
