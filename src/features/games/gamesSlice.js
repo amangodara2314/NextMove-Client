@@ -42,7 +42,7 @@ const gamesSlice = createSlice({
     },
 
     fetchGamesSuccess(state, action) {
-      state.games = action.payload.games;
+      state.games = [...state.games, ...action.payload.games];
       state.cursor = action.payload.nextCursor;
       state.hasMoreGames = action.payload.hasMore;
       state.loadingGames = false;

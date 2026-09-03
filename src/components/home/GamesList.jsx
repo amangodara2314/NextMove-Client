@@ -3,7 +3,7 @@ import GameRowSkeleton from "./GameRowSkeleton";
 import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
 import GameRow from "./GameRow";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Loader from "../Loader";
 
 export default function GamesList({
@@ -14,35 +14,33 @@ export default function GamesList({
   loaderRef,
   fetchGames,
 }) {
+  const fetchGamesRef = useRef(fetchGames);
   useEffect(() => {
-    console.log("GamesList useEffect called. Loader ref:", loaderRef);
-    if (loaderRef) {
-      console.log(
-        "Setting up IntersectionObserver for loaderRef:",
-        loaderRef.current,
-      );
+    fetchGamesRef.current = fetchGames;
+  }, [fetchGames]);
 
-      const observer = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-          console.log("Loader is visible, fetching more games...");
-          fetchGames();
-        }
-      });
-      if (loaderRef.current) {
-        observer.observe(loaderRef.current);
+  useEffect(() => {
+    const node = loaderRef?.current;
+    if (!node) return;
+    console.log("Setting up IntersectionObserver for loaderRef:", node);
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        console.log("Loader is visible, fetching more games...");
+        fetchGamesRef.current();
       }
-    }
-    () => {
-      if (loaderRef && loaderRef.current) {
-        observer.unobserve(loaderRef.current);
-      }
+    });
+
+    observer.observe(node);
+
+    return () => {
+      observer.disconnect();
     };
-  }, [loaderRef.current]);
-
+  }, [loaderRef, games.length]);
   return (
     <Card className="p-0">
       <CardContent className="p-0">
-        {loading ? (
+        {loading && games.length === 0 ? (
           <div className="divide-y divide-border">
             {Array.from({ length: 5 }).map((_, i) => (
               <GameRowSkeleton key={i} />
@@ -75,7 +73,12 @@ export default function GamesList({
                 ref={loaderRef}
                 className="min-h-0 w-full bg-transparent flex justify-center items-center"
               >
-                {loading && <Loader />}
+                {loading && (
+                  <div className="py-6">
+                    {" "}
+                    <Loader />
+                  </div>
+                )}
               </div>
             )}
           </div>

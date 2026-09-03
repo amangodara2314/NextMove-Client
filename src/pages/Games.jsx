@@ -20,9 +20,9 @@ export default function Games() {
 
   return (
     <div className="h-full bg-background">
-      <div className="mx-auto max-w-5xl px-6 py-6 sm:px-10 sm:py-14">
-        <h2 className="my-4 text-xs font-medium uppercase tracking-widest text-muted-foreground flex flex-row items-center justify-between space-y-0">
-          Your Games
+      <div className="mx-auto max-w-5xl px-6 sm:px-10 sm:py-6">
+        <h2 className="my-4 text-lg font-medium uppercase tracking-widest text-muted-foreground flex flex-row items-center justify-between space-y-0">
+          Your Games History
         </h2>
         <GamesList
           games={games}

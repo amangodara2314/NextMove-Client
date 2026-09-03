@@ -14,8 +14,7 @@ const endpoints = {
   },
   game: {
     GET_GAME: (gameId) => `/game/${gameId}`,
-    GET_GAMES: (take = 10, cursor) =>
-      `/game?${cursor ? "&cursor=" + cursor : ""}`,
+    GET_GAMES: (cursor) => `/game?${cursor ? "&cursor=" + cursor : ""}`,
     GET_MOVES: (gameId, cursor) =>
       `/game/moves/${gameId}${cursor ? "?cursor=" + cursor : ""}`,
     CHECK_PLAYER_TIMEOUT: (gameId) => `/game/check-timeout/${gameId}`,

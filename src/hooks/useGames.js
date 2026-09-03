@@ -26,7 +26,7 @@ export default function useGames() {
 
   const dispatch = useDispatch();
 
-  const fetchGames = async (cursor) => {
+  const fetchGames = async () => {
     if (!hasMoreGames) return;
     dispatch(fetchGamesStart());
     if (abortController.current) {
@@ -38,6 +38,7 @@ export default function useGames() {
         signal: abortController.current.signal,
       });
       const data = getResponseData(response);
+      if (data.nextCursor === cursor) return;
       dispatch(fetchGamesSuccess(data));
     } catch (error) {
       if (error.name === "CanceledError") {
