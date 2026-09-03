@@ -42,7 +42,7 @@ export default function Home() {
     <div className="h-full bg-background">
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');`}</style>
 
-      <div className="mx-auto max-w-5xl px-6 py-14 sm:px-10 sm:py-20">
+      <div className="mx-auto max-w-5xl px-6 py-6 sm:px-10 sm:py-14">
         {/* Hero */}
         <div className="relative overflow-hidden grid grid-cols-3">
           <ChessEmblem className="pointer-events-none absolute -right-32 top-0 h-[16rem] w-[16rem] text-foreground sm:h-[22rem] sm:w-[22rem] hidden lg:block" />

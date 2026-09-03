@@ -25,6 +25,10 @@ const getRecentGames = () => {
   return api.get(endpoints.game.RECENT_GAMES(10));
 };
 
+const getGames = (cursor, options) => {
+  return api.get(endpoints.game.GET_GAMES(cursor), options);
+};
+
 export {
   getGame,
   getMoves,
@@ -32,4 +36,5 @@ export {
   offerDraw,
   acceptDraw,
   getRecentGames,
+  getGames,
 };

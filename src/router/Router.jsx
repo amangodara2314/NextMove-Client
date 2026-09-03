@@ -1,10 +1,15 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import Login from "../pages/auth/Login";
 import AuthenticatedLayout from "../layouts/AuthenticatedLayout";
 import MainLayout from "../layouts/MainLayout";
 import Home from "../pages/Home";
 import Matchmaking from "../pages/Matchmaking";
 import Game from "../pages/Game";
+import Games from "../pages/Games";
 
 export default function Router() {
   const router = createBrowserRouter([
@@ -33,7 +38,16 @@ export default function Router() {
           path: "/game/:gameId",
           element: <Game />,
         },
+        {
+          path: "/games",
+          element: <Games />,
+        },
       ],
+    },
+
+    {
+      path: "*",
+      element: <Navigate to="/" replace />,
     },
   ]);
   return <RouterProvider router={router} />;

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { selectGames } from "../features/games/gamesSelector";
+import { selectGamesStore } from "../features/games/gamesSelector";
 import { getErrorMessage, getResponseData } from "../utils/responseHelpers";
 import { toast } from "sonner";
 import { getRecentGames } from "../services/game/gameServices";
@@ -11,8 +11,12 @@ import {
 import { useEffect } from "react";
 
 export default function useRecentGames() {
-  const { recentGames, loadingRecentGames, errorLoadingRecentGames } =
-    useSelector(selectGames);
+  const {
+    recentGames,
+    loadingRecentGames,
+    errorLoadingRecentGames,
+    shouldFetchRecentGames,
+  } = useSelector(selectGamesStore);
   const dispatch = useDispatch();
 
   const fetchRecentGames = async () => {
@@ -29,9 +33,10 @@ export default function useRecentGames() {
   };
 
   useEffect(() => {
+    if (!shouldFetchRecentGames) return;
     if (recentGames && recentGames.length !== 0) return;
     fetchRecentGames();
-  }, []);
+  }, [recentGames, shouldFetchRecentGames]);
 
   return {
     recentGames,

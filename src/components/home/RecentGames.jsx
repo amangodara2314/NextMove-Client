@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "../../lib/utils";
 import GameRow from "./GameRow";
 import GameRowSkeleton from "./GameRowSkeleton";
+import GamesList from "./GamesList";
 
 export default function RecentGames({
   games = [],
@@ -34,40 +35,13 @@ export default function RecentGames({
         )}
       </h2>
 
-      <Card className="p-0">
-        <CardContent className="p-0">
-          {loading ? (
-            <div className="divide-y divide-border">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <GameRowSkeleton key={i} />
-              ))}
-            </div>
-          ) : error ? (
-            <div className="px-6 py-10 text-center text-sm text-muted-foreground">
-              Couldn't load your recent games. Try refreshing the page.
-            </div>
-          ) : games.length === 0 ? (
-            <div className="flex flex-col items-center gap-3 px-6 py-12 text-center">
-              <p className="text-sm text-muted-foreground">
-                You haven't played any games yet.
-              </p>
-              <Button asChild size="sm">
-                <Link to="/play">Play your first game</Link>
-              </Button>
-            </div>
-          ) : (
-            <div className="divide-y divide-border">
-              {games.slice(0, maxRows).map((game) => (
-                <GameRow
-                  key={game.id}
-                  game={game}
-                  currentUsername={currentUsername}
-                />
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      <GamesList
+        games={games}
+        loading={loading}
+        error={error}
+        currentUsername={currentUsername}
+        maxRows={maxRows}
+      />
     </>
   );
 }

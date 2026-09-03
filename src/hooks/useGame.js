@@ -8,10 +8,12 @@ import {
 import { getErrorMessage, getResponseData } from "../utils/responseHelpers";
 import socket from "../configs/socket";
 import { toast } from "sonner";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../features/auth/authSelectors";
+import { setShouldFetchRecentGames } from "../features/games/gamesSlice";
 import { showDrawOfferToast } from "../components/game/DrawOfferToast";
 import { emitWithAuth } from "../utils/emitWithAuth";
+import { selectShouldFetchRecentGames } from "../features/games/gamesSelector";
 
 export default function useGame(gameId) {
   const [game, setGame] = useState(null);
@@ -19,6 +21,7 @@ export default function useGame(gameId) {
   const [error, setError] = useState(null);
   const [verifyingPlayerTimeout, setVerifyingPlayerTimeout] = useState(false);
   const user = useSelector(selectUser);
+  const dispatch = useDispatch();
 
   const syncGame = async (signal) => {
     const res = await getGame(gameId, signal ? { signal } : undefined);
@@ -198,6 +201,9 @@ export default function useGame(gameId) {
     gameResult = null,
     ...rest
   }) => {
+    if (gameStatus !== "ACTIVE") {
+      dispatch(setShouldFetchRecentGames(true));
+    }
     setGame((prev) => {
       if (!prev) return prev;
       return {
