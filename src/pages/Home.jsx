@@ -31,7 +31,7 @@ function ChessEmblem({ className }) {
 }
 
 export default function Home() {
-  const { ratings, loadingRatings, ratingsError, fetchRatings } = useRatings();
+  const { ratings, loadingRatings, ratingsError } = useRatings();
   const { recentGames, loadingRecentGames, errorLoadingRecentGames } =
     useRecentGames();
   const user = useSelector(selectUser);

@@ -25,6 +25,17 @@ export default function RatingStats({ ratings, ratingsError, loadingRatings }) {
               <p className="mt-1 text-sm text-muted-foreground">
                 {rating.type}
               </p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {rating.gamesPlayed} games
+                {rating.gamesPlayed > 0 && (
+                  <>
+                    {" "}
+                    <span className="text-emerald-500">{rating.wins}W</span>
+                    <span className="mx-0.5">–</span>
+                    <span className="text-rose-500">{rating.losses}L</span>
+                  </>
+                )}
+              </p>
             </div>
           ))}
         </div>
