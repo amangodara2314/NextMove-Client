@@ -1,14 +1,5 @@
 import { useState } from "react";
-import {
-  Menu,
-  X,
-  Home,
-  Settings,
-  User,
-  Bell,
-  MessageCircle,
-  Gamepad,
-} from "lucide-react";
+import { Menu, X, Home, User, Gamepad } from "lucide-react";
 
 import {
   Tooltip,
@@ -20,6 +11,7 @@ import { Link } from "react-router-dom";
 
 const navItems = [
   { name: "Home", icon: Home, to: "/" },
+  { name: "Profile", icon: User, to: "/profile" },
   { name: "Play", icon: Gamepad, to: "/play" },
 ];
 

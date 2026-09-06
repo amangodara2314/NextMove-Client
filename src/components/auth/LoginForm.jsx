@@ -1,21 +1,16 @@
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
-  Field,
   FieldDescription,
   FieldGroup,
-  FieldLabel,
   FieldSeparator,
-  FieldError,
 } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Link } from "react-router-dom";
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "../../validations/authSchema";
 import GoogleAuthButton from "./GoogleAuthButton";
-import { ChessKingIcon, ChessKnightIcon } from "lucide-react";
+import { ChessKnightIcon } from "lucide-react";
 
 export function LoginForm({
   className,
@@ -25,7 +20,6 @@ export function LoginForm({
   ...props
 }) {
   const {
-    register,
     handleSubmit,
     setError,
     formState: { errors, isSubmitting },

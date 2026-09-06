@@ -10,6 +10,7 @@ import Home from "../pages/Home";
 import Matchmaking from "../pages/Matchmaking";
 import Game from "../pages/Game";
 import Games from "../pages/Games";
+import Profile from "../pages/Profile";
 
 export default function Router() {
   const router = createBrowserRouter([
@@ -41,6 +42,10 @@ export default function Router() {
         {
           path: "/games",
           element: <Games />,
+        },
+        {
+          path: "/profile",
+          element: <Profile />,
         },
       ],
     },
