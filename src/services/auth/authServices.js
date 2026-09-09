@@ -25,4 +25,16 @@ const googleAuth = (data) => {
   return api.post(endpoints.auth.GOOGLE_AUTH, data);
 };
 
-export { login, getMe, register, verifyOtp, resendOtp, googleAuth };
+const updateProfile = (data) => {
+  return api.put(endpoints.auth.PROFILE, data);
+};
+
+export {
+  login,
+  getMe,
+  register,
+  verifyOtp,
+  resendOtp,
+  googleAuth,
+  updateProfile,
+};

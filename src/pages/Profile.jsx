@@ -1,18 +1,11 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import { selectUser } from "../features/auth/authSelectors";
-import { useForm } from "react-hook-form";
 import {
   Field,
-  FieldContent,
   FieldDescription,
-  FieldError,
-  FieldGroup,
   FieldLabel,
-  FieldLegend,
-  FieldSeparator,
   FieldSet,
-  FieldTitle,
 } from "@/components/ui/field";
 import { Input } from "../components/ui/input";
 import RatingStats from "../components/home/RatingStats";
@@ -23,6 +16,10 @@ import {
 } from "../features/rating/ratingSelectors";
 import { Button } from "../components/ui/button";
 import { useState } from "react";
+import { toast } from "sonner";
+import { getErrorMessage, getResponseData } from "../utils/responseHelpers";
+import { updateProfile } from "../services/auth/authServices";
+import { setUser } from "../features/auth/authSlice";
 
 export default function Profile() {
   const user = useSelector(selectUser);
@@ -30,16 +27,54 @@ export default function Profile() {
   const loadingRatings = useSelector(selectLoadingRatings);
   const ratingsError = useSelector(selectRatingsError);
   const [isEditing, setIsEditing] = useState(false);
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors, isSubmitting },
-  } = useForm();
+  const [userName, setUserName] = useState(user?.username || "");
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+
+  const handleSubmit = async () => {
+    if (userName.trim() === "") {
+      toast.error("Username cannot be empty.");
+    }
+
+    if (userName.trim() === user?.username) {
+      toast.error("Username is already in use.");
+    }
+
+    if (userName.trim().length < 3) {
+      toast.error("Username must be at least 3 characters long.");
+    }
+
+    if (userName.trim().length > 20) {
+      toast.error("Username cannot be longer than 20 characters.");
+    }
+    setLoading(true);
+
+    try {
+      const response = await updateProfile({ username: userName });
+      const data = getResponseData(response);
+      setIsEditing(false);
+      setUserName(data.username);
+      dispatch(setUser({ user: { ...data, username: data.username } }));
+      toast.success("Profile updated successfully.");
+    } catch (error) {
+      console.log("Error updating profile:", error);
+      const message = getErrorMessage(error);
+      toast.error(message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const toggleEditing = () => {
     setIsEditing((prev) => !prev);
   };
+
+  const shouldDisable =
+    !isEditing ||
+    userName.trim() === "" ||
+    userName.trim() === user?.username ||
+    userName.trim().length > 20 ||
+    userName.trim().length < 3;
 
   return (
     <div className="h-full bg-background">
@@ -68,7 +103,8 @@ export default function Profile() {
                   id="username"
                   autoComplete="off"
                   placeholder="Enter your username"
-                  defaultValue={user?.username}
+                  onChange={(e) => setUserName(e.target.value)}
+                  value={userName}
                 />
                 <FieldDescription>
                   This is your public username that will be displayed to other
@@ -86,7 +122,13 @@ export default function Profile() {
                     >
                       Cancel
                     </Button>
-                    <Button type="submit">Submit</Button>
+                    <Button
+                      onClick={handleSubmit}
+                      disabled={shouldDisable || loading}
+                      type="submit"
+                    >
+                      {loading ? "Saving..." : "Save"}
+                    </Button>
                   </>
                 ) : (
                   <Button

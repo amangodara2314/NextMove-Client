@@ -7,6 +7,7 @@ const endpoints = {
     RESEND_OTP: "/auth/resend-otp",
     VERIFY_OTP: "/auth/verify-otp",
     GOOGLE_AUTH: "/auth/google",
+    PROFILE: "/auth/profile",
   },
   matchmaking: {
     NEW_GAME: "/matchmaking/new-game",
