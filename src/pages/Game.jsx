@@ -102,11 +102,13 @@ export default function Game() {
 
   const canMove =
     selectedMove && !selectedMove?.isLast ? false : game.turn === myColor;
+
+  console.log(ratingData);
   return (
     <div className="md:h-screen flex items-center justify-center bg-background overflow-hidden">
-      <div className="grid grid-cols-1 md:grid-cols-3 md:gap-6 w-full max-w-4xl md:h-[95vh] min-h-0 rounded-lg px-4 py-1 md:border md:border-border">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 w-full max-w-4xl md:h-[95vh] min-h-0 rounded-lg px-4 py-3 md:py-1 md:border md:border-border">
         {/* ── Board column ── */}
-        <div className="flex flex-col h-full min-h-0 overflow-hidden md:col-span-2">
+        <div className="flex flex-col gap-1 sm:gap-0 h-full min-h-0 overflow-hidden md:col-span-2">
           <PlayerPanel
             {...opponentProps}
             verifyPlayerTimeout={verifyPlayerTimeout}

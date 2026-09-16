@@ -20,8 +20,8 @@ export default function useMatchmaking() {
       emitWithAuth("MATCH_ACK", { reservationId: data.reservationId });
     };
 
-    const handleNoMatchFound = () => {
-      console.log("No match found");
+    const handleNoMatchFound = (data) => {
+      console.log("No match found", "data :", data);
       setIsSearching(false);
       setNoMatchFound(true);
     };

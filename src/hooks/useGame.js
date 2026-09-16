@@ -51,7 +51,7 @@ export default function useGame(gameId) {
 
   const handleOfferDraw = async () => {
     try {
-      const response = await offerDraw(gameId);
+      await offerDraw(gameId);
       toast.success("Draw offer sent.");
     } catch (err) {
       toast.error(getErrorMessage(err));
@@ -122,6 +122,7 @@ export default function useGame(gameId) {
     const onMoveMade = (data) => applyMoveUpdate(data);
 
     const onGameAborted = (data) => {
+      console.log("Game aborted by opponent:", data);
       toast.error(data.message || "This game has been aborted by opponent");
       setGame((prev) => {
         if (!prev) return prev;
@@ -129,6 +130,7 @@ export default function useGame(gameId) {
           ...prev,
           status: "ABORTED",
           abortedBy: data?.abortedBy,
+          ...data?.updatedGame,
         };
       });
     };
@@ -148,6 +150,7 @@ export default function useGame(gameId) {
     };
 
     const updateGame = (data) => {
+      console.log("Updating game with data:", data);
       setGame((prev) => {
         if (!prev) return prev;
         return {
