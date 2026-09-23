@@ -45,9 +45,9 @@ export default function SidePanel({
       </div>
 
       {/* Draw and Resign buttons */}
-      {game.status === "ACTIVE" && (
-        <DrawResignButtons handleOfferDraw={handleOfferDraw} />
-      )}
+      {/* {game.status === "ACTIVE" && ( */}
+      <DrawResignButtons handleOfferDraw={handleOfferDraw} />
+      {/* )} */}
     </div>
   );
 }

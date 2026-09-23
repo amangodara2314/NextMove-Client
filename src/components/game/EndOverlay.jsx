@@ -59,7 +59,7 @@ export default function EndOverlay({
               <span>
                 Your rating: {ratingData.myRatingBefore} →{" "}
                 {ratingData.myRatingAfter} (
-                {ratingData.myRatingChange >= 0 ? "+" : "-"}
+                {ratingData.myRatingChange >= 0 ? "+" : ""}
                 {ratingData.myRatingChange})
               </span>
             )}

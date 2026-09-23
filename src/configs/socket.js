@@ -6,8 +6,11 @@ const socketUrl = new URL(apiBaseUrl).origin;
 
 const socket = io(socketUrl, {
   autoConnect: false,
-  transports: ["websocket"],
   upgrade: false,
+  transports: ["websocket"],
+  reconnection: true,
+  reconnectionDelay: 1000,
+  reconnectionDelayMax: 5000,
 });
 
 socket.io.on("reconnect_attempt", () => {

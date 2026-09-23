@@ -29,6 +29,10 @@ const getGames = (cursor, options) => {
   return api.get(endpoints.game.GET_GAMES(cursor), options);
 };
 
+const resignGame = (gameId) => {
+  return api.post(endpoints.game.RESIGN(gameId));
+};
+
 export {
   getGame,
   getMoves,
@@ -37,4 +41,5 @@ export {
   acceptDraw,
   getRecentGames,
   getGames,
+  resignGame,
 };

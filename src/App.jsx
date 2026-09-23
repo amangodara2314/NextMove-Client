@@ -24,13 +24,24 @@ export default function App() {
 
     socket.on("connect", handleConnect);
     socket.on("disconnect", handleDisconnect);
+    socket.on("connect_error", handleDisconnect);
 
     return () => {
       socket.off("connect", handleConnect);
       socket.off("disconnect", handleDisconnect);
+      socket.off("connect_error", handleDisconnect);
       disconnectSocket();
     };
   }, [accessToken]);
+
+  useEffect(() => {
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden && !socket.connected) {
+        console.log("Tab active, forcing socket reconnection...");
+        socket.connect();
+      }
+    });
+  }, []);
 
   return (
     <>

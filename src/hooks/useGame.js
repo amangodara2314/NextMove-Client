@@ -13,7 +13,6 @@ import { selectUser } from "../features/auth/authSelectors";
 import { setShouldFetchRecentGames } from "../features/games/gamesSlice";
 import { showDrawOfferToast } from "../components/game/DrawOfferToast";
 import { emitWithAuth } from "../utils/emitWithAuth";
-import { selectShouldFetchRecentGames } from "../features/games/gamesSelector";
 
 export default function useGame(gameId) {
   const [game, setGame] = useState(null);

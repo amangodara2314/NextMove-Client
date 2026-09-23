@@ -22,6 +22,7 @@ const endpoints = {
     OFFER_DRAW: (gameId) => `/game/offer-draw/${gameId}`,
     ACCEPT_DRAW: (gameId) => `/game/accept-draw/${gameId}`,
     RECENT_GAMES: (take = 10) => `/game/recent?take=${take}`,
+    RESIGN: (gameId) => `/game/resign/${gameId}`,
   },
   RATING: {
     GET_USER_RATINGS: `/rating/all`,
