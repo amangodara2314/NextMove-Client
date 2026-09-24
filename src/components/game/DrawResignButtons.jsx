@@ -4,7 +4,7 @@ import { useState } from "react";
 import Loader from "../Loader";
 import ConfirmationDialog from "../ConfirmationDialog";
 
-export default function DrawResignButtons({ handleOfferDraw }) {
+export default function DrawResignButtons({ handleOfferDraw, handleResign }) {
   const [loading, setLoading] = useState(false);
   const handleOfferDrawClick = async (action) => {
     setLoading(true);
@@ -19,6 +19,7 @@ export default function DrawResignButtons({ handleOfferDraw }) {
         triggerButtonProps={{
           asChild: true,
         }}
+        handleConfirm={handleResign}
       >
         <Button className="w-full" variant="destructive" disabled={loading}>
           Resign

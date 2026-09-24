@@ -4,6 +4,7 @@ import {
   checkPlayerTimeout,
   getGame,
   offerDraw,
+  resignGame,
 } from "../services/game/gameServices";
 import { getErrorMessage, getResponseData } from "../utils/responseHelpers";
 import socket from "../configs/socket";
@@ -52,6 +53,22 @@ export default function useGame(gameId) {
     try {
       await offerDraw(gameId);
       toast.success("Draw offer sent.");
+    } catch (err) {
+      toast.error(getErrorMessage(err));
+    }
+  };
+
+  const handleResign = async () => {
+    try {
+      const res = await resignGame(gameId);
+      const data = getResponseData(res);
+      setGame((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          ...data,
+        };
+      });
     } catch (err) {
       toast.error(getErrorMessage(err));
     }
@@ -269,5 +286,6 @@ export default function useGame(gameId) {
     handleMove,
     verifyPlayerTimeout,
     handleOfferDraw,
+    handleResign,
   };
 }

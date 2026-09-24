@@ -30,7 +30,7 @@ const getGames = (cursor, options) => {
 };
 
 const resignGame = (gameId) => {
-  return api.post(endpoints.game.RESIGN(gameId));
+  return api.put(endpoints.game.RESIGN(gameId));
 };
 
 export {

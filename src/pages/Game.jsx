@@ -17,7 +17,7 @@ export default function Game() {
     verifyingPlayerTimeout,
     verifyPlayerTimeout,
     handleOfferDraw,
-    handleAcceptDraw,
+    handleResign,
   } = useGame(gameId);
   const {
     moves,
@@ -146,6 +146,7 @@ export default function Game() {
             selectedMove={selectedMove}
             setSelectedMove={setSelectedMove}
             handleOfferDraw={handleOfferDraw}
+            handleResign={handleResign}
           />
         </div>
       </div>

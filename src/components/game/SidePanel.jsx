@@ -12,13 +12,8 @@ export default function SidePanel({
   selectedMove,
   setSelectedMove,
   handleOfferDraw,
+  handleResign,
 }) {
-  const started = new Date(game.createdAt);
-  const startedStr =
-    started.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) +
-    " · " +
-    started.toLocaleDateString([], { month: "short", day: "numeric" });
-
   return (
     <div className="h-full flex flex-col min-h-0 bg-muted/10 border border-border rounded-lg">
       {/* Header */}
@@ -45,9 +40,12 @@ export default function SidePanel({
       </div>
 
       {/* Draw and Resign buttons */}
-      {/* {game.status === "ACTIVE" && ( */}
-      <DrawResignButtons handleOfferDraw={handleOfferDraw} />
-      {/* )} */}
+      {game.status === "ACTIVE" && (
+        <DrawResignButtons
+          handleOfferDraw={handleOfferDraw}
+          handleResign={handleResign}
+        />
+      )}
     </div>
   );
 }
