@@ -30,17 +30,22 @@ export default function useGame(gameId) {
     return data.game;
   };
 
+  const updateGame = (data) => {
+    setGame((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        ...data,
+      };
+    });
+  };
+
   const verifyPlayerTimeout = async () => {
     try {
       setVerifyingPlayerTimeout(true);
       const res = await checkPlayerTimeout(gameId);
       const data = getResponseData(res);
-      setGame((prev) => {
-        return {
-          ...prev,
-          ...data,
-        };
-      });
+      updateGame(data);
     } catch (error) {
       const message = getErrorMessage(error);
       toast.error(message);
@@ -62,13 +67,7 @@ export default function useGame(gameId) {
     try {
       const res = await resignGame(gameId);
       const data = getResponseData(res);
-      setGame((prev) => {
-        if (!prev) return prev;
-        return {
-          ...prev,
-          ...data,
-        };
-      });
+      updateGame(data);
     } catch (err) {
       toast.error(getErrorMessage(err));
     }
@@ -79,18 +78,74 @@ export default function useGame(gameId) {
       const response = await acceptDraw(gameId);
       const data = getResponseData(response);
       if (data.game) {
-        setGame((prev) => {
-          if (!prev) return prev;
-          return {
-            ...prev,
-            ...data.game,
-          };
-        });
+        updateGame(data.game);
       }
     } catch (err) {
       console.log("Error accepting draw:", err);
       toast.error(getErrorMessage(err));
     }
+  };
+
+  const applyMoveUpdate = ({
+    fen,
+    version,
+    move,
+    whiteTimeLeft,
+    blackTimeLeft,
+    gameStatus = null,
+    gameResult = null,
+    ...rest
+  }) => {
+    if (gameStatus !== "ACTIVE") {
+      dispatch(setShouldFetchRecentGames(true));
+    }
+    updateGame({
+      fen,
+      version,
+      turn: fen.split(" ")[1] === "w" ? "WHITE" : "BLACK",
+      lastMove: move,
+      whiteTimeLeft: Number(whiteTimeLeft),
+      blackTimeLeft: Number(blackTimeLeft),
+      status: gameStatus || prev.status,
+      result: gameResult,
+      ...rest,
+    });
+  };
+
+  const handleMove = (data) => {
+    return new Promise((resolve, reject) => {
+      emitWithAuth("MAKE_MOVE", data, (response) => {
+        if (!response?.success) {
+          if (response?.message === "STALE_STATE") {
+            toast.error("Board was out of sync — refreshing...");
+            syncGame().catch((err) => {
+              setError(getErrorMessage(err));
+              toast.error(getErrorMessage(err));
+            });
+          } else {
+            toast.error(response?.message || "Failed to make move");
+          }
+          reject(response);
+          return;
+        }
+        if (response?.gameOver) {
+          updateGame({
+            status: response.gameStatus ?? game.status,
+            result: response.gameResult ?? game.result,
+          });
+        }
+        if (game.version !== response.version) {
+          applyMoveUpdate({
+            fen: response.fen,
+            version: response.version,
+            move: response.move,
+            whiteTimeLeft: response.whiteTimeLeft,
+            blackTimeLeft: response.blackTimeLeft,
+          });
+        }
+        resolve(response);
+      });
+    });
   };
 
   useEffect(() => {
@@ -138,42 +193,15 @@ export default function useGame(gameId) {
     const onMoveMade = (data) => applyMoveUpdate(data);
 
     const onGameAborted = (data) => {
-      console.log("Game aborted by opponent:", data);
-      toast.error(data.message || "This game has been aborted by opponent");
-      setGame((prev) => {
-        if (!prev) return prev;
-        return {
-          ...prev,
-          status: "ABORTED",
-          abortedBy: data?.abortedBy,
-          ...data?.updatedGame,
-        };
-      });
+      toast(data.message || "This game has been aborted by opponent");
+      updateGame(data);
     };
 
     const playerReconnected = (data) => {
-      const updatedData =
-        data.color === "WHITE"
-          ? { whiteConnected: true }
-          : { blackConnected: true };
-      setGame((prev) => {
-        if (!prev) return prev;
-        return {
-          ...prev,
-          ...updatedData,
-        };
-      });
-    };
-
-    const updateGame = (data) => {
-      console.log("Updating game with data:", data);
-      setGame((prev) => {
-        if (!prev) return prev;
-        return {
-          ...prev,
-          ...data,
-        };
-      });
+      const updatedConnectionState = data.updatedConnectionState;
+      if (updatedConnectionState) {
+        updateGame(updatedConnectionState);
+      }
     };
 
     const onDrawOffer = (data) => {
@@ -192,6 +220,11 @@ export default function useGame(gameId) {
       updateGame(data);
     };
 
+    const onResign = (data) => {
+      toast.success("Your opponent has resigned. You win!");
+      updateGame(data);
+    };
+
     socket.on("MOVE_MADE", onMoveMade);
     socket.on("GAME_ABORTED", onGameAborted);
     socket.on("PLAYER_RECONNECTED", playerReconnected);
@@ -199,6 +232,7 @@ export default function useGame(gameId) {
     socket.on("PLAYER_TIMEOUT", updateGame);
     socket.on("DRAW_OFFERED", onDrawOffer);
     socket.on("DRAW_ACCEPTED", onDrawAccepted);
+    socket.on("RESIGN", onResign);
     return () => {
       socket.off("MOVE_MADE", onMoveMade);
       socket.off("GAME_ABORTED", onGameAborted);
@@ -209,73 +243,6 @@ export default function useGame(gameId) {
       socket.off("DRAW_ACCEPTED", onDrawAccepted);
     };
   }, [gameId]);
-
-  const applyMoveUpdate = ({
-    fen,
-    version,
-    move,
-    whiteTimeLeft,
-    blackTimeLeft,
-    gameStatus = null,
-    gameResult = null,
-    ...rest
-  }) => {
-    if (gameStatus !== "ACTIVE") {
-      dispatch(setShouldFetchRecentGames(true));
-    }
-    setGame((prev) => {
-      if (!prev) return prev;
-      return {
-        ...prev,
-        fen,
-        version,
-        turn: fen.split(" ")[1] === "w" ? "WHITE" : "BLACK",
-        lastMove: move,
-        whiteTimeLeft: Number(whiteTimeLeft),
-        blackTimeLeft: Number(blackTimeLeft),
-        status: gameStatus || prev.status,
-        result: gameResult,
-        ...rest,
-      };
-    });
-  };
-
-  const handleMove = (data) => {
-    return new Promise((resolve, reject) => {
-      emitWithAuth("MAKE_MOVE", data, (response) => {
-        if (!response?.success) {
-          if (response?.message === "STALE_STATE") {
-            toast.error("Board was out of sync — refreshing...");
-            syncGame().catch((err) => {
-              setError(getErrorMessage(err));
-              toast.error(getErrorMessage(err));
-            });
-          } else {
-            toast.error(response?.message || "Failed to make move");
-          }
-          reject(response);
-          return;
-        }
-        if (response?.gameOver) {
-          setGame((prev) => ({
-            ...prev,
-            status: response.gameStatus ?? prev.status,
-            result: response.gameResult ?? prev.result,
-          }));
-        }
-        if (game.version !== response.version) {
-          applyMoveUpdate({
-            fen: response.fen,
-            version: response.version,
-            move: response.move,
-            whiteTimeLeft: response.whiteTimeLeft,
-            blackTimeLeft: response.blackTimeLeft,
-          });
-        }
-        resolve(response);
-      });
-    });
-  };
 
   return {
     game,
