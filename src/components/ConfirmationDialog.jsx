@@ -41,13 +41,10 @@ export default function ConfirmationDialog({
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <DialogClose
-            render={
-              <Button onClick={handleCancelClick} variant="outline">
-                Cancel
-              </Button>
-            }
-          />
+          <Button onClick={handleCancelClick} variant="outline">
+            Cancel
+          </Button>
+
           <Button type="submit" onClick={handleConfirmClick} disabled={loading}>
             {loading ? "Processing..." : "Proceed"}
           </Button>
