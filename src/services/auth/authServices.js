@@ -29,6 +29,10 @@ const updateProfile = (data) => {
   return api.put(endpoints.auth.PROFILE, data);
 };
 
+const refreshToken = () => {
+  return api.get(endpoints.auth.REFRESH_TOKEN);
+};
+
 export {
   login,
   getMe,
@@ -37,4 +41,5 @@ export {
   resendOtp,
   googleAuth,
   updateProfile,
+  refreshToken,
 };

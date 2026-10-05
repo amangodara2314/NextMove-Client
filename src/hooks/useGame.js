@@ -221,8 +221,12 @@ export default function useGame(gameId) {
     };
 
     const onResign = (data) => {
-      toast.success("Your opponent has resigned. You win!");
-      updateGame(data);
+      if (data.resignedBy === user.id) {
+        toast.success("You have resigned the game.");
+      } else {
+        toast.success("Your opponent has resigned. You win!");
+      }
+      updateGame(data.updatedGame);
     };
 
     socket.on("MOVE_MADE", onMoveMade);

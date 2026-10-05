@@ -6,16 +6,11 @@ const socketUrl = new URL(apiBaseUrl).origin;
 
 const socket = io(socketUrl, {
   autoConnect: false,
-  upgrade: false,
   transports: ["websocket"],
+  auth: (cb) => cb({ token: Cookies.get("accessToken") }),
   reconnection: true,
   reconnectionDelay: 1000,
   reconnectionDelayMax: 5000,
-});
-
-socket.io.on("reconnect_attempt", () => {
-  const token = Cookies.get("accessToken");
-  if (token) socket.auth = { token };
 });
 
 export const connectSocket = () => {

@@ -6,30 +6,48 @@ import { useEffect } from "react";
 import socket, { connectSocket, disconnectSocket } from "./configs/socket";
 import { Toaster } from "@/components/ui/sonner";
 import { useSelector } from "react-redux";
+import { refreshToken } from "./services/auth/authServices";
+import { getResponseData } from "./utils/responseHelpers";
 
 export default function App() {
-  const accessToken = useSelector((state) => state.auth.accessToken);
+  const { accessToken, isAuthenticated } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (!accessToken) return;
-    const handleConnect = () => {
-      console.log("Connected:", socket.id);
+    if (!isAuthenticated) return;
+
+    const onConnect = () =>
+      console.log("Connected:", socket.id, socket.io.engine.transport.name);
+    const onDisconnect = (reason, details) =>
+      console.log("Disconnected:", reason, details);
+    const onVisible = () => {
+      if (!document.hidden && !socket.active) socket.connect();
     };
 
-    const handleDisconnect = (reason) => {
-      console.log("Disconnected:", reason);
+    const onConnectError = async (err) => {
+      console.log("connect_error:", err.message, "active:", socket.active);
+      if (!socket.active) {
+        const result = await refreshToken();
+        console.log("refreshToken result:", result);
+        const data = getResponseData(result);
+        const newAccessToken = data.accessToken;
+
+        Cookies.set("accessToken", newAccessToken, { expires: 7 });
+        socket.connect();
+      }
     };
 
     connectSocket();
 
-    socket.on("connect", handleConnect);
-    socket.on("disconnect", handleDisconnect);
-    socket.on("connect_error", handleDisconnect);
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+    socket.on("connect_error", onConnectError);
+    document.addEventListener("visibilitychange", onVisible);
 
     return () => {
-      socket.off("connect", handleConnect);
-      socket.off("disconnect", handleDisconnect);
-      socket.off("connect_error", handleDisconnect);
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+      socket.off("connect_error", onConnectError);
+      document.removeEventListener("visibilitychange", onVisible);
       disconnectSocket();
     };
   }, [accessToken]);

@@ -55,6 +55,15 @@ const OUTCOME_STYLES = {
     subtitleColor: "text-slate-400/70",
     ratingChangeColor: "text-slate-400",
   },
+  resigned: {
+    backdrop: "bg-black/65",
+    ring: "rgba(239,68,68,0.45)",
+    card: "bg-gradient-to-b from-red-950/90 to-stone-950/95 border-red-500/25",
+    iconColor: "text-red-400",
+    titleColor: "text-red-200",
+    subtitleColor: "text-red-400/60",
+    ratingChangeColor: "text-destructive",
+  },
 };
 
 export { ANIMATION_STYLES, OUTCOME_STYLES };
