@@ -106,7 +106,7 @@ export default function useGame(gameId) {
       lastMove: move,
       whiteTimeLeft: Number(whiteTimeLeft),
       blackTimeLeft: Number(blackTimeLeft),
-      status: gameStatus || prev.status,
+      status: gameStatus || game.status,
       result: gameResult,
       ...rest,
     });
