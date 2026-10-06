@@ -86,30 +86,12 @@ export default function useGame(gameId) {
     }
   };
 
-  const applyMoveUpdate = ({
-    fen,
-    version,
-    move,
-    whiteTimeLeft,
-    blackTimeLeft,
-    gameStatus = null,
-    gameResult = null,
-    ...rest
-  }) => {
-    if (gameStatus !== "ACTIVE") {
+  const applyMoveUpdate = (data) => {
+    if (data.status !== "ACTIVE") {
       dispatch(setShouldFetchRecentGames(true));
     }
-    updateGame({
-      fen,
-      version,
-      turn: fen.split(" ")[1] === "w" ? "WHITE" : "BLACK",
-      lastMove: move,
-      whiteTimeLeft: Number(whiteTimeLeft),
-      blackTimeLeft: Number(blackTimeLeft),
-      status: gameStatus || game.status,
-      result: gameResult,
-      ...rest,
-    });
+    console.log("Applying move update:", data);
+    updateGame(data);
   };
 
   const handleMove = (data) => {
@@ -128,20 +110,14 @@ export default function useGame(gameId) {
           reject(response);
           return;
         }
-        if (response?.gameOver) {
-          updateGame({
-            status: response.gameStatus ?? game.status,
-            result: response.gameResult ?? game.result,
-          });
-        }
+        // if (response?.gameOver) {
+        //   updateGame({
+        //     status: response.gameStatus ?? game.status,
+        //     result: response.gameResult ?? game.result,
+        //   });
+        // }
         if (game.version !== response.version) {
-          applyMoveUpdate({
-            fen: response.fen,
-            version: response.version,
-            move: response.move,
-            whiteTimeLeft: response.whiteTimeLeft,
-            blackTimeLeft: response.blackTimeLeft,
-          });
+          applyMoveUpdate(response);
         }
         resolve(response);
       });

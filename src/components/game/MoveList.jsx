@@ -65,6 +65,7 @@ export default function MoveList({
             {pairs.map((pair, pairIdx) => {
               const whiteIdx = pairIdx * 2;
               const blackIdx = pairIdx * 2 + 1;
+
               return (
                 <div key={pair.num} className="mb-0.5 flex items-center gap-1">
                   <span className="w-8 shrink-0 px-1 font-mono text-sm text-muted-foreground">
@@ -74,7 +75,8 @@ export default function MoveList({
                     move={pair.white}
                     isLast={whiteIdx === lastMoveIndex}
                     isSelected={
-                      selectedMove && selectedMove.id === pair.white?.id
+                      selectedMove &&
+                      selectedMove.moveNumber === pair.white?.moveNumber
                     }
                     onClick={setSelectedMove}
                   />
@@ -82,7 +84,8 @@ export default function MoveList({
                     move={pair.black}
                     isLast={blackIdx === lastMoveIndex}
                     isSelected={
-                      selectedMove && selectedMove.id === pair.black?.id
+                      selectedMove &&
+                      selectedMove.moveNumber === pair.black?.moveNumber
                     }
                     onClick={setSelectedMove}
                   />

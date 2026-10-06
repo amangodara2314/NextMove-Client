@@ -18,6 +18,7 @@ export default function Board({
   selectedMove,
   gameStatus,
   abortedBy,
+  resignedBy,
   myColor,
   timedOutBy,
   ratingData = {},
@@ -31,9 +32,9 @@ export default function Board({
   const [squareSize, setSquareSize] = useState(0);
 
   const isAborted = gameStatus === "ABORTED";
-  const abortedByYou = isAborted && abortedBy === myColor;
   const isTimeout = gameStatus === "TIMEOUT";
-  const isGameEnded = isAborted || isTimeout;
+  const isResigned = gameStatus === "RESIGNED";
+  const isGameEnded = isAborted || isTimeout || isResigned;
 
   useEffect(() => {
     if (!boardRef.current) return;
@@ -283,6 +284,7 @@ export default function Board({
           timedOutBy={timedOutBy}
           myColor={myColor}
           ratingData={ratingData}
+          resignedBy={resignedBy}
         />
       )}
 
