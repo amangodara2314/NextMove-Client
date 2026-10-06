@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { useSelector } from "react-redux";
 import { refreshToken } from "./services/auth/authServices";
 import { getResponseData } from "./utils/responseHelpers";
+import Cookies from "js-cookie";
 
 export default function App() {
   const { accessToken, isAuthenticated } = useSelector((state) => state.auth);
