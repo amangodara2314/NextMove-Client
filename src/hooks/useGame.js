@@ -14,6 +14,12 @@ import { selectUser } from "../features/auth/authSelectors";
 import { setShouldFetchRecentGames } from "../features/games/gamesSlice";
 import { showDrawOfferToast } from "../components/game/DrawOfferToast";
 import { emitWithAuth } from "../utils/emitWithAuth";
+import { setRating } from "../features/rating/ratingSlice";
+
+const userRatingAfter = {
+  WHITE: "whiteRatingAfter",
+  BLACK: "blackRatingAfter",
+};
 
 export default function useGame(gameId) {
   const [game, setGame] = useState(null);
@@ -33,10 +39,28 @@ export default function useGame(gameId) {
   const updateGame = (data) => {
     setGame((prev) => {
       if (!prev) return prev;
-      return {
+
+      const updatedGame = {
         ...prev,
         ...data,
       };
+
+      if (
+        data.status &&
+        data.status !== prev.status &&
+        prev.status === "ACTIVE"
+      ) {
+        // Handle game status change
+        dispatch(
+          setRating({
+            rating: data[userRatingAfter[prev.userColor]],
+            type: prev.timeControl.split("_")[0],
+          }),
+        );
+        dispatch(setShouldFetchRecentGames(true));
+      }
+
+      return updatedGame;
     });
   };
 
@@ -87,10 +111,6 @@ export default function useGame(gameId) {
   };
 
   const applyMoveUpdate = (data) => {
-    if (data.status !== "ACTIVE") {
-      dispatch(setShouldFetchRecentGames(true));
-    }
-    console.log("Applying move update:", data);
     updateGame(data);
   };
 
@@ -110,12 +130,7 @@ export default function useGame(gameId) {
           reject(response);
           return;
         }
-        // if (response?.gameOver) {
-        //   updateGame({
-        //     status: response.gameStatus ?? game.status,
-        //     result: response.gameResult ?? game.result,
-        //   });
-        // }
+
         if (game.version !== response.version) {
           applyMoveUpdate(response);
         }

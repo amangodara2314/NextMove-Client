@@ -22,7 +22,6 @@ function Clock({
   timeLeft = 0,
   isRunning = false,
   verifyPlayerTimeout,
-  verifyingPlayerTimeout,
   isYou = false,
   isGameActive = true,
 }) {
