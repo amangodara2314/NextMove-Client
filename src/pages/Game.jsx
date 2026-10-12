@@ -127,11 +127,9 @@ export default function Game() {
                 gameId={game.id}
                 onMove={handleMove}
                 gameStatus={game.status}
-                abortedBy={game.abortedBy}
+                result={game.result}
                 myColor={myColor}
-                timedOutBy={timedOutBy}
                 ratingData={ratingData}
-                resignedBy={resignedBy}
               />
             </div>
           </div>

@@ -90,7 +90,7 @@ export default function Home() {
           </div>
         </div>
 
-        <Separator className="my-12" />
+        <Separator className="my-6" />
 
         {/* Stats */}
         <RatingStats

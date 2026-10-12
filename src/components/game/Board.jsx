@@ -4,7 +4,6 @@ import { Chessboard } from "react-chessboard";
 import getGameResult from "../../utils/getGameResult";
 import { DEFAULT_TIME_SPENT } from "../../constants/pieces";
 import PromotionDialog from "./PromotionDialog";
-import GameOverOverlay from "./GameOverOverlay";
 import EndOverlay from "./EndOverlay";
 
 export default function Board({
@@ -17,11 +16,9 @@ export default function Board({
   canMove,
   selectedMove,
   gameStatus,
-  abortedBy,
-  resignedBy,
   myColor,
-  timedOutBy,
   ratingData = {},
+  result,
 }) {
   const [game, setGame] = useState(() => new Chess());
   const [moveFrom, setMoveFrom] = useState("");
@@ -30,11 +27,6 @@ export default function Board({
   const [gameResult, setGameResult] = useState(null);
   const boardRef = useRef(null);
   const [squareSize, setSquareSize] = useState(0);
-
-  const isAborted = gameStatus === "ABORTED";
-  const isTimeout = gameStatus === "TIMEOUT";
-  const isResigned = gameStatus === "RESIGNED";
-  const isGameEnded = isAborted || isTimeout || isResigned;
 
   useEffect(() => {
     if (!boardRef.current) return;
@@ -252,17 +244,11 @@ export default function Board({
     ? (game.get(pendingPromotion.to)?.color ?? boardOrientation[0])
     : null;
 
-  let showGameOverOverlay = false;
-  if (!isGameEnded && gameStatus !== "ACTIVE") {
-    if (!selectedMove) {
-      showGameOverOverlay = !!gameResult;
-    } else {
-      showGameOverOverlay =
-        selectedMove.isCheckmate || selectedMove.isStalemate ? true : false;
-    }
-  }
+  const isGameEnded = game.status !== "ACTIVE";
 
   const showEndOverlay = isGameEnded && !selectedMove;
+
+  const isWinner = result === myColor;
 
   return (
     <div ref={boardRef} className="relative inline-block">
@@ -279,17 +265,10 @@ export default function Board({
 
       {showEndOverlay && (
         <EndOverlay
-          type={gameStatus}
-          abortedBy={abortedBy}
-          timedOutBy={timedOutBy}
-          myColor={myColor}
+          status={gameStatus}
+          isWinner={isWinner}
           ratingData={ratingData}
-          resignedBy={resignedBy}
         />
-      )}
-
-      {showGameOverOverlay && (
-        <GameOverOverlay result={gameResult} ratingData={ratingData} />
       )}
 
       <Chessboard

@@ -1,58 +1,56 @@
 import { Ban, Clock, Flag } from "lucide-react";
 
-export default function EndOverlay({
-  type,
-  abortedBy,
-  timedOutBy,
-  resignedBy,
-  myColor,
-  ratingData,
-}) {
-  const isAborted = type === "ABORTED";
-  const isTimeout = type === "TIMEOUT";
-  const isResigned = type === "RESIGNED";
-  let byYou = false;
-
-  if (isAborted) {
-    byYou = abortedBy === myColor;
-  } else if (isTimeout) {
-    byYou = timedOutBy === myColor;
-  } else if (isResigned) {
-    byYou = resignedBy === myColor;
-  }
+export default function EndOverlay({ status, isWinner, ratingData }) {
+  const baseDesign = {
+    iconBg: isWinner ? "bg-emerald-500/15" : "bg-destructive/15",
+    iconColor: isWinner ? "text-emerald-400" : "text-destructive",
+  };
 
   const STYLE_MAP = {
     ABORTED: {
       icon: Ban,
-      iconBg: "bg-amber-500/15",
-      iconColor: "text-amber-400",
       title: "Game Aborted",
-      description: byYou
-        ? "You aborted this game before it counted."
-        : "Your opponent left before the game counted.",
+      description: isWinner
+        ? "Your opponent left before the game counted."
+        : "You aborted this game before it counted.",
+      ...baseDesign,
     },
     TIMEOUT: {
       icon: Clock,
-      iconBg: byYou ? "bg-destructive/15" : "bg-emerald-500/15",
-      iconColor: byYou ? "text-destructive" : "text-emerald-400",
-      title: byYou ? "You Ran Out of Time" : "Opponent Ran Out of Time",
-      description: byYou
-        ? "Your clock hit zero. The game has ended by timeout."
-        : "Their clock hit zero. You win by timeout.",
+      title: isWinner ? "Opponent Ran Out of Time" : "You Ran Out of Time",
+      description: isWinner
+        ? "Their clock hit zero. You win by timeout."
+        : "Your clock hit zero. The game has ended by timeout.",
+      ...baseDesign,
     },
 
     RESIGNED: {
       icon: Flag,
-      iconBg: byYou ? "bg-destructive/15" : "bg-emerald-500/15",
-      iconColor: byYou ? "text-destructive" : "text-emerald-400",
-      title: byYou ? "You Resigned" : "Opponent Resigned",
-      description: byYou
-        ? "You resigned from this game."
-        : "Your opponent resigned from this game.",
+      title: isWinner ? "Opponent Resigned" : "You Resigned",
+      description: isWinner
+        ? "Your opponent resigned from this game."
+        : "You resigned from this game.",
+      ...baseDesign,
+    },
+
+    DRAW: {
+      icon: Flag,
+      title: "Draw",
+      description: "The game has ended in a draw.",
+      ...baseDesign,
+    },
+
+    FINISHED: {
+      icon: Flag,
+      title: isWinner ? "You Won the game" : "You Lost the game",
+      description: isWinner
+        ? "Well Done! You won the game."
+        : "Your opponent defeated you. Better luck next time.",
+      ...baseDesign,
     },
   };
 
-  const config = STYLE_MAP[type];
+  const config = STYLE_MAP[status];
 
   const Icon = config.icon;
 
