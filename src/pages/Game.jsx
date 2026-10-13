@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useParams } from "react-router-dom";
 import Board from "../components/game/Board";
 import PlayerPanel from "../components/game/PlayerPanel";
@@ -6,6 +5,7 @@ import useGame from "../hooks/useGame.js";
 import Loader from "../components/Loader";
 import useMoves from "../hooks/useMoves.js";
 import SidePanel from "../components/game/SidePanel";
+import { getPlayerProps, getRatingData } from "../utils/helper.js";
 
 export default function Game() {
   const { gameId } = useParams();
@@ -50,59 +50,17 @@ export default function Game() {
   }
 
   const myColor = game.userColor;
+  const opponentColor = myColor === "WHITE" ? "BLACK" : "WHITE";
 
-  const ratingData = {
-    myRatingBefore:
-      myColor === "WHITE" ? game.whiteRatingBefore : game.blackRatingBefore,
-    myRatingAfter:
-      myColor === "WHITE" ? game.whiteRatingAfter : game.blackRatingAfter,
-    myRatingChange:
-      myColor === "WHITE" ? game.whiteRatingChange : game.blackRatingChange,
-    opponentRatingBefore:
-      myColor === "WHITE" ? game.blackRatingBefore : game.whiteRatingBefore,
-    opponentRatingAfter:
-      myColor === "WHITE" ? game.blackRatingAfter : game.whiteRatingAfter,
-    opponentRatingChange:
-      myColor === "WHITE" ? game.blackRatingChange : game.whiteRatingChange,
-  };
+  const ratingData = getRatingData(myColor, game);
 
-  const opponentProps = {
-    player: myColor === "WHITE" ? game.blackPlayer : game.whitePlayer,
-    color: myColor === "WHITE" ? "BLACK" : "WHITE",
-    active: game.turn !== myColor,
-    isYou: false,
-    borderSide: "top",
-    isConnected:
-      (myColor === "WHITE" ? game.blackConnected : game.whiteConnected) ?? true,
-    gameStatus: game.status,
-    timeLeft: myColor === "WHITE" ? game.blackTimeLeft : game.whiteTimeLeft,
-    verifyingPlayerTimeout,
-    ratingBefore: ratingData.opponentRatingBefore,
-    ratingAfter: ratingData.opponentRatingAfter,
-    ratingChange: ratingData.opponentRatingChange,
-  };
-
-  const myProps = {
-    player: myColor === "WHITE" ? game.whitePlayer : game.blackPlayer,
-    color: myColor,
-    active: game.turn === myColor,
-    isYou: true,
-    borderSide: "bottom",
-    isConnected:
-      (myColor === "WHITE" ? game.whiteConnected : game.blackConnected) ?? true,
-    gameStatus: game.status,
-    timeLeft: myColor === "WHITE" ? game.whiteTimeLeft : game.blackTimeLeft,
-    verifyingPlayerTimeout,
-    ratingBefore: ratingData.myRatingBefore,
-    ratingAfter: ratingData.myRatingAfter,
-    ratingChange: ratingData.myRatingChange,
-  };
-
-  const timedOutBy = game.result === "BLACK" ? "WHITE" : "BLACK";
-  const resignedBy = game.result === "BLACK" ? "WHITE" : "BLACK";
+  const myProps = getPlayerProps(myColor, true, game);
+  const opponentProps = getPlayerProps(opponentColor, false, game);
 
   const canMove =
-    selectedMove && !selectedMove?.isLast ? false : game.turn === myColor;
+    game.status === "ACTIVE" && !selectedMove && !selectedMove?.isLast
+      ? false
+      : game.turn === myColor;
 
   return (
     <div className="md:h-screen flex items-center justify-center bg-background overflow-hidden">

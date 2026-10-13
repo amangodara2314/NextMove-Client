@@ -42,7 +42,7 @@ export default function EndOverlay({ status, isWinner, ratingData }) {
 
     FINISHED: {
       icon: Flag,
-      title: isWinner ? "You Won the game" : "You Lost the game",
+      title: isWinner ? "You Won the game" : "You Lost the",
       description: isWinner
         ? "Well Done! You won the game."
         : "Your opponent defeated you. Better luck next time.",
