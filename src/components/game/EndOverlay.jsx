@@ -1,6 +1,7 @@
 import { Ban, Clock, Flag } from "lucide-react";
 
 export default function EndOverlay({ status, isWinner, ratingData }) {
+  if (!status || status === "ACTIVE") return null;
   const baseDesign = {
     iconBg: isWinner ? "bg-emerald-500/15" : "bg-destructive/15",
     iconColor: isWinner ? "text-emerald-400" : "text-destructive",

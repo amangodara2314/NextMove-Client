@@ -5,10 +5,11 @@ export function formatIncrement(increment) {
 
 export const getPlayerProps = (color, isYou, game) => {
   const side = color === "WHITE" ? "white" : "black";
+
   return {
     player: game[`${side}Player`],
     color,
-    active: isYou ? game.turn === color : game.turn !== color,
+    active: game.turn === color,
     isYou,
     borderSide: isYou ? "bottom" : "top",
     isConnected: game[`${side}Connected`] ?? true,

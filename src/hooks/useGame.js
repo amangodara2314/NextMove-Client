@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
-  acceptDraw,
   checkPlayerTimeout,
   getGame,
   offerDraw,
@@ -9,12 +8,11 @@ import {
 import { getErrorMessage, getResponseData } from "../utils/responseHelpers";
 import socket from "../configs/socket";
 import { toast } from "sonner";
-import { useDispatch, useSelector } from "react-redux";
-import { selectUser } from "../features/auth/authSelectors";
+import { useDispatch } from "react-redux";
 import { setShouldFetchRecentGames } from "../features/games/gamesSlice";
-import { showDrawOfferToast } from "../components/game/DrawOfferToast";
 import { emitWithAuth } from "../utils/emitWithAuth";
 import { setRating } from "../features/rating/ratingSlice";
+import useGameEvents from "./useGameEvents";
 
 const userRatingAfter = {
   WHITE: "whiteRatingAfter",
@@ -26,17 +24,46 @@ export default function useGame(gameId) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [verifyingPlayerTimeout, setVerifyingPlayerTimeout] = useState(false);
-  const user = useSelector(selectUser);
+  const gameRef = useRef({
+    status: game?.status,
+    userColor: game?.userColor,
+    timeControl: game?.timeControl,
+  });
   const dispatch = useDispatch();
 
   const syncGame = async (signal) => {
     const res = await getGame(gameId, signal ? { signal } : undefined);
     let data = getResponseData(res);
     setGame(data.game);
+    gameRef.current = {
+      status: data.game.status,
+      userColor: data.game.userColor,
+      timeControl: data.game.timeControl,
+    };
     return data.game;
   };
 
   const updateGame = (data) => {
+    if (
+      data.status &&
+      data.status !== gameRef.current.status &&
+      gameRef.current.status === "ACTIVE"
+    ) {
+      // Handle game status change
+      dispatch(
+        setRating({
+          rating: data[userRatingAfter[gameRef.current.userColor]],
+          type: gameRef.current.timeControl.split("_")[0],
+        }),
+      );
+      dispatch(setShouldFetchRecentGames(true));
+    }
+
+    gameRef.current = {
+      ...gameRef.current,
+      ...data,
+    };
+
     setGame((prev) => {
       if (!prev) return prev;
 
@@ -44,21 +71,6 @@ export default function useGame(gameId) {
         ...prev,
         ...data,
       };
-
-      if (
-        data.status &&
-        data.status !== prev.status &&
-        prev.status === "ACTIVE"
-      ) {
-        // Handle game status change
-        dispatch(
-          setRating({
-            rating: data[userRatingAfter[prev.userColor]],
-            type: prev.timeControl.split("_")[0],
-          }),
-        );
-        dispatch(setShouldFetchRecentGames(true));
-      }
 
       return updatedGame;
     });
@@ -93,19 +105,6 @@ export default function useGame(gameId) {
       const data = getResponseData(res);
       updateGame(data);
     } catch (err) {
-      toast.error(getErrorMessage(err));
-    }
-  };
-
-  const handleAcceptDraw = async () => {
-    try {
-      const response = await acceptDraw(gameId);
-      const data = getResponseData(response);
-      if (data.game) {
-        updateGame(data.game);
-      }
-    } catch (err) {
-      console.log("Error accepting draw:", err);
       toast.error(getErrorMessage(err));
     }
   };
@@ -178,66 +177,7 @@ export default function useGame(gameId) {
     };
   }, [gameId]);
 
-  useEffect(() => {
-    if (!gameId) return;
-
-    const onMoveMade = (data) => applyMoveUpdate(data);
-
-    const onGameAborted = (data) => {
-      toast(data.message || "This game has been aborted by opponent");
-      updateGame(data);
-    };
-
-    const playerReconnected = (data) => {
-      const updatedConnectionState = data.updatedConnectionState;
-      if (updatedConnectionState) {
-        updateGame(updatedConnectionState);
-      }
-    };
-
-    const onDrawOffer = (data) => {
-      const { offeredTo, ttl, gameId: payloadGameId } = data;
-
-      if (offeredTo === user.id && gameId === payloadGameId) {
-        showDrawOfferToast({
-          ttl,
-          onAccept: () => handleAcceptDraw(),
-        });
-      }
-    };
-
-    const onDrawAccepted = (data) => {
-      toast("Draw accepted. The game has ended in a draw.");
-      updateGame(data);
-    };
-
-    const onResign = (data) => {
-      if (data.resignedBy === user.id) {
-        toast.success("You have resigned the game.");
-      } else {
-        toast.success("Your opponent has resigned. You win!");
-      }
-      updateGame(data.updatedGame);
-    };
-
-    socket.on("MOVE_MADE", onMoveMade);
-    socket.on("GAME_ABORTED", onGameAborted);
-    socket.on("PLAYER_RECONNECTED", playerReconnected);
-    socket.on("PLAYER_DISCONNECTED", updateGame);
-    socket.on("PLAYER_TIMEOUT", updateGame);
-    socket.on("DRAW_OFFERED", onDrawOffer);
-    socket.on("DRAW_ACCEPTED", onDrawAccepted);
-    socket.on("RESIGN", onResign);
-    return () => {
-      socket.off("MOVE_MADE", onMoveMade);
-      socket.off("GAME_ABORTED", onGameAborted);
-      socket.off("PLAYER_RECONNECTED", playerReconnected);
-      socket.off("PLAYER_DISCONNECTED", updateGame);
-      socket.off("PLAYER_TIMEOUT", updateGame);
-      socket.off("DRAW_OFFERED", onDrawOffer);
-      socket.off("DRAW_ACCEPTED", onDrawAccepted);
-    };
-  }, [gameId]);
+  useGameEvents({ gameId, updateGame, applyMoveUpdate });
 
   return {
     game,

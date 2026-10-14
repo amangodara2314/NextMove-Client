@@ -27,6 +27,7 @@ export default function Board({
   const [gameResult, setGameResult] = useState(null);
   const boardRef = useRef(null);
   const [squareSize, setSquareSize] = useState(0);
+  const isGameEnded = gameStatus !== "ACTIVE";
 
   useEffect(() => {
     if (!boardRef.current) return;
@@ -243,8 +244,6 @@ export default function Board({
   const promotingColor = pendingPromotion
     ? (game.get(pendingPromotion.to)?.color ?? boardOrientation[0])
     : null;
-
-  const isGameEnded = game.status !== "ACTIVE";
 
   const showEndOverlay = isGameEnded && !selectedMove;
 

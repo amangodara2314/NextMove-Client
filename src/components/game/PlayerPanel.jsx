@@ -4,7 +4,6 @@ import Clock from "./Clock";
 
 function PlayerPanel({
   player,
-  color,
   active,
   isYou,
   borderSide = "left",
@@ -14,10 +13,11 @@ function PlayerPanel({
   verifyingPlayerTimeout,
   verifyPlayerTimeout,
   ratingBefore,
-  ratingAfter,
   ratingChange,
 }) {
   const isRunning = active && gameStatus === "ACTIVE";
+
+  console.log(active, gameStatus, isRunning);
 
   return (
     <div

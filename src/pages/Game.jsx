@@ -57,8 +57,8 @@ export default function Game() {
   const myProps = getPlayerProps(myColor, true, game);
   const opponentProps = getPlayerProps(opponentColor, false, game);
 
-  const canMove =
-    game.status === "ACTIVE" && !selectedMove && !selectedMove?.isLast
+  let canMove =
+    game.status === "ACTIVE" && selectedMove && !selectedMove?.isLast
       ? false
       : game.turn === myColor;
 
