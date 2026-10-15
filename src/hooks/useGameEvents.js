@@ -33,8 +33,9 @@ export default function useGameEvents({
     const onMoveMade = (data) => applyMoveUpdate(data);
 
     const onGameAborted = (data) => {
+      console.log("Game aborted:", data);
       toast(data.message || "This game has been aborted by opponent");
-      updateGame(data);
+      updateGame(data.updatedGame);
     };
 
     const playerReconnected = (data) => {
