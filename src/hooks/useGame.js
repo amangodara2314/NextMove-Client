@@ -157,6 +157,12 @@ export default function useGame(gameId) {
       try {
         setLoading(true);
         const gameData = await syncGame(controller.signal);
+        if (!socket.connected) {
+          console.log("Socket not connected. skipping join game...");
+          // await socket.connect();
+          // console.log("Connecting to socket server...");
+        }
+
         if (socket.connected && gameData.status === "ACTIVE") joinGame(false);
       } catch (err) {
         if (err.code === "ERR_CANCELED") return;

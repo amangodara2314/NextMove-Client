@@ -86,6 +86,7 @@ export default function useGameEvents({
       socket.off("PLAYER_TIMEOUT", updateGame);
       socket.off("DRAW_OFFERED", onDrawOffer);
       socket.off("DRAW_ACCEPTED", onDrawAccepted);
+      socket.off("RESIGN", onResign);
     };
   }, [gameId]);
 }
