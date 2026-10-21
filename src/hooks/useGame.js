@@ -157,13 +157,20 @@ export default function useGame(gameId) {
       try {
         setLoading(true);
         const gameData = await syncGame(controller.signal);
+
         if (!socket.connected) {
-          console.log("Socket not connected. skipping join game...");
-          // await socket.connect();
-          // console.log("Connecting to socket server...");
+          console.log("Socket not connected. Connecting...");
+
+          await new Promise((resolve, reject) => {
+            socket.once("connect", resolve);
+            socket.once("connect_error", reject);
+            socket.connect();
+          });
         }
 
-        if (socket.connected && gameData.status === "ACTIVE") joinGame(false);
+        if (gameData.status === "ACTIVE") {
+          joinGame(false);
+        }
       } catch (err) {
         if (err.code === "ERR_CANCELED") return;
         console.log("Error fetching game:", err);
