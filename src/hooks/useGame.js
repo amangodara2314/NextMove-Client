@@ -142,14 +142,18 @@ export default function useGame(gameId) {
     if (!gameId) return;
 
     const controller = new AbortController();
+    let initialSyncDone = false;
 
-    const joinGame = (shouldSync = true) => {
+    const joinGame = () => {
+      if (gameRef.current.status !== "ACTIVE") return;
       emitWithAuth("JOIN_GAME", { gameId });
-      if (shouldSync) {
-        syncGame().catch((err) => {
-          setError(getErrorMessage(err));
-          toast.error(getErrorMessage(err));
-        });
+    };
+
+    const onConnect = () => {
+      joinGame();
+
+      if (initialSyncDone) {
+        syncGame().catch((err) => toast.error(getErrorMessage(err)));
       }
     };
 
@@ -157,36 +161,29 @@ export default function useGame(gameId) {
       try {
         setLoading(true);
         const gameData = await syncGame(controller.signal);
+        initialSyncDone = true;
 
-        if (!socket.connected) {
-          console.log("Socket not connected. Connecting...");
+        if (gameData.status !== "ACTIVE") return;
 
-          await new Promise((resolve, reject) => {
-            socket.once("connect", resolve);
-            socket.once("connect_error", reject);
-            socket.connect();
-          });
-        }
-
-        if (gameData.status === "ACTIVE") {
-          joinGame(false);
+        if (socket.connected) {
+          joinGame();
+        } else {
+          socket.connect();
         }
       } catch (err) {
         if (err.code === "ERR_CANCELED") return;
-        console.log("Error fetching game:", err);
         setError(getErrorMessage(err));
       } finally {
         if (!controller.signal.aborted) setLoading(false);
       }
     };
 
+    socket.on("connect", onConnect);
     fetchInitial();
-
-    if (game && game.status === "ACTIVE") socket.on("connect", joinGame);
 
     return () => {
       controller.abort();
-      socket.off("connect", joinGame);
+      socket.off("connect", onConnect);
     };
   }, [gameId]);
 

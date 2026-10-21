@@ -17,8 +17,6 @@ function PlayerPanel({
 }) {
   const isRunning = active && gameStatus === "ACTIVE";
 
-  console.log(active, gameStatus, isRunning);
-
   return (
     <div
       className={[
