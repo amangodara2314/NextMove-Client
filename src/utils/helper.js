@@ -5,6 +5,7 @@ export function formatIncrement(increment) {
 
 export const getPlayerProps = (color, isYou, game) => {
   const side = color === "WHITE" ? "white" : "black";
+  const shortSide = side.charAt(0);
 
   return {
     player: game[`${side}Player`],
@@ -18,6 +19,7 @@ export const getPlayerProps = (color, isYou, game) => {
     ratingBefore: game[`${side}RatingBefore`],
     ratingAfter: game[`${side}RatingAfter`],
     ratingChange: game[`${side}RatingChange`],
+    capturedPieces: game.capturedPieces?.[shortSide] ?? [],
   };
 };
 

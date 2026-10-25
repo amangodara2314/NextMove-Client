@@ -28,6 +28,7 @@ export default function useGame(gameId) {
     status: game?.status,
     userColor: game?.userColor,
     timeControl: game?.timeControl,
+    capturedPieces: game?.capturedPieces,
   });
   const dispatch = useDispatch();
 
@@ -39,11 +40,13 @@ export default function useGame(gameId) {
       status: data.game.status,
       userColor: data.game.userColor,
       timeControl: data.game.timeControl,
+      capturedPieces: data.game.capturedPieces,
     };
     return data.game;
   };
 
   const updateGame = (data) => {
+    console.log("Updating game state with data:", data);
     if (
       data.status &&
       data.status !== gameRef.current.status &&
@@ -110,7 +113,21 @@ export default function useGame(gameId) {
   };
 
   const applyMoveUpdate = (data) => {
-    updateGame(data);
+    if (data.version === gameRef.current.version) {
+      return; // No update needed
+    }
+    const { capturedPiece, capturedBy, ...rest } = data;
+    console.log("Applying move update:", capturedPiece, capturedBy);
+    if (capturedPiece && capturedBy) {
+      rest.capturedPieces = {
+        ...gameRef.current.capturedPieces,
+        [capturedBy]: [
+          capturedPiece,
+          ...(gameRef.current.capturedPieces[capturedBy] || []),
+        ],
+      };
+    }
+    updateGame(rest);
   };
 
   const handleMove = (data) => {

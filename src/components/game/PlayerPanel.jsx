@@ -2,6 +2,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { WifiOff } from "lucide-react";
 import Clock from "./Clock";
 
+const PIECE_ICONS = {
+  p: "♟",
+  n: "♞",
+  b: "♝",
+  r: "♜",
+  q: "♛",
+  k: "♚",
+};
+
 function PlayerPanel({
   player,
   active,
@@ -14,6 +23,7 @@ function PlayerPanel({
   verifyPlayerTimeout,
   ratingBefore,
   ratingChange,
+  capturedPieces = [], // array of captured piece types, e.g., ['p', 'n', 'b']
 }) {
   const isRunning = active && gameStatus === "ACTIVE";
 
@@ -56,7 +66,7 @@ function PlayerPanel({
         )}
       </div>
 
-      <div className="flex-1 min-w-0 space-x-0">
+      <div className="flex-1 min-w-0 space-x-0 space-y-1">
         <div className="flex items-center gap-1.5">
           <div
             className={[
@@ -73,18 +83,32 @@ function PlayerPanel({
           )}
         </div>
 
-        {isConnected ? (
-          <span className="text-sm text-muted-foreground leading-none">
-            #{ratingBefore}{" "}
-            {gameStatus !== "ACTIVE" &&
-              `(${ratingChange >= 0 ? "+" : ""}${ratingChange})`}
-          </span>
-        ) : (
-          <span className="inline-flex items-center gap-1 text-sm font-medium text-destructive leading-none animate-pulse">
-            <WifiOff className="h-3.5 w-3.5" />
-            Disconnected
-          </span>
-        )}
+        <div className="flex items-center gap-2">
+          {isConnected ? (
+            <span className="text-sm text-muted-foreground leading-none">
+              #{ratingBefore}{" "}
+              {gameStatus !== "ACTIVE" &&
+                `(${ratingChange >= 0 ? "+" : ""}${ratingChange})`}
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1 text-sm font-medium text-destructive leading-none animate-pulse">
+              <WifiOff className="h-3.5 w-3.5" />
+              Disconnected
+            </span>
+          )}
+          {capturedPieces.length > 0 ? (
+            <li className="flex items-center gap-1 text-sm text-muted-foreground">
+              {capturedPieces.map((piece, index) => (
+                <span
+                  key={index}
+                  className="text-md text-foreground leading-none"
+                >
+                  {PIECE_ICONS[piece] || piece.toUpperCase()}
+                </span>
+              ))}
+            </li>
+          ) : null}
+        </div>
       </div>
 
       <Clock
